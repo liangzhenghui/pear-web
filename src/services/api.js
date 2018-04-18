@@ -67,7 +67,7 @@ export async function accountLogin(params) {
   });
 }
 
-export async function register(params) {  
+export async function register(params) {
   return request('/auth/signup', {
     method: 'POST',
     body: params,

@@ -136,12 +136,13 @@ const proxy = {
     });
   },
 };
+const api = 'http://192.168.1.6:7777/';
 const product = {
-  'GET /*': 'http://localhost:7777/',
-  'POST /*': 'http://localhost:7777/',
-  'PUT /*': 'http://localhost:7777/',
-  'PATCH /*': 'http://localhost:7777/',
-  'DELETE /*': 'http://localhost:7777/',
-  'OPTIONS /*': 'http://localhost:7777/'
-}
+  'GET /*': api,
+  'POST /*': api,
+  'PUT /*': api,
+  'PATCH /*': api,
+  'DELETE /*': api,
+  'OPTIONS /*': api,
+};
 export default (noProxy ? product : delay(proxy, 1000));

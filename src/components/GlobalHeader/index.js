@@ -110,12 +110,7 @@ export default class GlobalHeader extends PureComponent {
             }}
           />
           <Tooltip title="使用文档">
-            <a
-              target="_blank"
-              href="/#doc"
-              rel="noopener noreferrer"
-              className={styles.action}
-            >
+            <a target="_blank" href="/#doc" rel="noopener noreferrer" className={styles.action}>
               <Icon type="question-circle-o" />
             </a>
           </Tooltip>
@@ -129,8 +124,8 @@ export default class GlobalHeader extends PureComponent {
               </span>
             </Dropdown>
           ) : (
-              <Spin size="small" style={{ marginLeft: 8 }} />
-            )}
+            <Spin size="small" style={{ marginLeft: 8 }} />
+          )}
         </div>
       </div>
     );

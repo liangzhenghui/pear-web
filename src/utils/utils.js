@@ -161,32 +161,32 @@ export function isUrl(path) {
 }
 
 export const cookie = {
-  get: (cookieKey) => {
-    const _cookie = document.cookie
-    const cookies = _cookie.split(';')
+  get: cookieKey => {
+    const _cookie = document.cookie;
+    const cookies = _cookie.split(';');
     for (const c of cookies) {
-      const item = c.split('=')
-      const key = item[0]
-      const value = item[1]
+      const item = c.split('=');
+      const key = item[0];
+      const value = item[1];
       if (cookieKey === key) {
-        return value
+        return value;
       }
     }
-    return null
+    return null;
   },
   set: (cookieKey, value) => {
-    const _cookie = document.cookie
-    const cookies = _cookie.split(';')
+    const _cookie = document.cookie;
+    const cookies = _cookie.split(';');
     for (const c of cookies) {
-      const item = c.split('=')
-      const key = item[0]
-      const value = item[1]
+      const item = c.split('=');
+      const key = item[0];
+      const value = item[1];
       if (cookieKey === key) {
-        cookies.pop(cookieKey)
-        break
+        cookies.pop(cookieKey);
+        break;
       }
     }
-    cookies.push(cookieKey + '=' + value)
-    document.cookie = cookies.join(';')
-  }
-}
+    cookies.push(cookieKey + '=' + value);
+    document.cookie = cookies.join(';');
+  },
+};

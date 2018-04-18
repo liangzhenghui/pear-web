@@ -7,21 +7,17 @@ import styles from './Login.less';
 
 const { Tab, UserName, Password, Mobile, Captcha, Submit } = Login;
 
-@connect(
-  ({ login, loading }) => ({
-    login,
-    submitting: loading.effects['login/login'],
-  })
-)
-
+@connect(({ login, loading }) => ({
+  login,
+  submitting: loading.effects['login/login'],
+}))
 export default class LoginPage extends Component {
-
   handleSubmit = (err, values) => {
     if (!err) {
       this.props.dispatch({
         type: 'login/login',
         payload: {
-          ...values
+          ...values,
         },
       });
     }

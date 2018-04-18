@@ -76,7 +76,7 @@ const members = [
   chart,
   projectLoading: loading.effects['project/fetchNotice'],
   activitiesLoading: loading.effects['activities/fetchList'],
-  user: user.currentUser
+  user: user.currentUser,
 }))
 export default class Workplace extends PureComponent {
   componentDidMount() {
@@ -140,13 +140,17 @@ export default class Workplace extends PureComponent {
       projectLoading,
       activitiesLoading,
       chart: { radarData },
-      user
+      user,
     } = this.props;
 
     const pageHeaderContent = (
       <div className={styles.pageHeaderContent}>
         <div className={styles.avatar}>
-          <Avatar className='avatar' size='small' src='https://cdn.v2ex.com/gravatar/15b5bbf377b3b254b01c8cb378ab26e2?s=73&d=retro' />
+          <Avatar
+            className="avatar"
+            size="small"
+            src="https://cdn.v2ex.com/gravatar/15b5bbf377b3b254b01c8cb378ab26e2?s=73&d=retro"
+          />
         </div>
         <div className={styles.content}>
           <div className={styles.contentTitle}> 欢迎，{user && user.name}。祝你开心每一天！</div>
@@ -229,7 +233,7 @@ export default class Workplace extends PureComponent {
               bordered={false}
               bodyStyle={{ padding: 0 }}
             >
-              <EditableLinkGroup onAdd={() => { }} links={links} linkElement={Link} />
+              <EditableLinkGroup onAdd={() => {}} links={links} linkElement={Link} />
             </Card>
             <Card
               style={{ marginBottom: 24 }}

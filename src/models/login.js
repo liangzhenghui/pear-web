@@ -3,7 +3,7 @@ import { accountLogin } from '../services/api';
 import { setAuthority } from '../utils/authority';
 import { reloadAuthorized } from '../utils/Authorized';
 import { notification } from 'antd';
-import {cookie} from '../utils/utils'
+import { cookie } from '../utils/utils';
 
 export default {
   namespace: 'login',
@@ -21,11 +21,11 @@ export default {
       });
       // Login successfully
       if (response.status === 'ok') {
-        reloadAuthorized();        
-        cookie.set('u_id', response.user.id)
+        reloadAuthorized();
+        cookie.set('u_id', response.user.id);
         notification.success({
-          message: '登录成功'
-        })
+          message: '登录成功',
+        });
         yield put(routerRedux.push('/'));
       }
     },
@@ -41,8 +41,8 @@ export default {
         yield put({
           type: 'changeLoginStatus',
           payload: {
-            status: false            
-          }
+            status: false,
+          },
         });
         reloadAuthorized();
         yield put(routerRedux.push('/user/login'));
@@ -52,7 +52,7 @@ export default {
 
   reducers: {
     changeLoginStatus(state, action) {
-      const { payload } = action
+      const { payload } = action;
       setAuthority(null);
       return {
         ...state,

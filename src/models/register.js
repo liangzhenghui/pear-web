@@ -1,8 +1,8 @@
 import { register } from '../services/api';
 import { setAuthority } from '../utils/authority';
 import { reloadAuthorized } from '../utils/Authorized';
-import { notification } from 'antd'
-import { routerRedux } from 'dva/router'
+import { notification } from 'antd';
+import { routerRedux } from 'dva/router';
 
 export default {
   namespace: 'register',
@@ -13,22 +13,22 @@ export default {
 
   effects: {
     *submit({ payload }, { call, put }) {
-      const response = yield call(register, payload);      
+      const response = yield call(register, payload);
       if (response.status === 'ok') {
         notification.success({
-          message: '注册成功'
-        })
+          message: '注册成功',
+        });
         yield put({
           type: 'registerHandle',
           payload: response,
         });
         yield put(routerRedux.push('/dashboard'));
-      }      
+      }
     },
   },
 
   reducers: {
-    registerHandle(state, { payload }) {      
+    registerHandle(state, { payload }) {
       setAuthority(payload.uId);
       reloadAuthorized();
       return {

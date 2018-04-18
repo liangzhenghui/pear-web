@@ -5,7 +5,7 @@ import zhCN from 'antd/lib/locale-provider/zh_CN';
 import dynamic from 'dva/dynamic';
 import { getRouterData } from './common/router';
 import Authorized from './utils/Authorized';
-import { cookie } from './utils/utils'
+import { cookie } from './utils/utils';
 import styles from './index.less';
 
 const { ConnectedRouter } = routerRedux;
@@ -27,8 +27,8 @@ function RouterConfig({ history, app }) {
             path="/"
             render={props => <BasicLayout {...props} />}
             authority={() => {
-              const uId = cookie.get('u_id')
-              return uId != null && uId != 'null' && uId > 0
+              const uId = cookie.get('u_id');
+              return uId != null && uId != 'null' && uId > 0;
             }}
             redirectPath="/user/login"
           />

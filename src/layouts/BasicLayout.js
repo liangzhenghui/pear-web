@@ -106,7 +106,7 @@ class BasicLayout extends React.PureComponent {
     });
 
     this.props.dispatch({
-      type: 'user/fetchCurrent'
+      type: 'user/fetchCurrent',
     });
   }
   componentWillUnmount() {
@@ -239,7 +239,7 @@ class BasicLayout extends React.PureComponent {
                   title: '首页',
                   href: '/',
                   blankTarget: false,
-                }                
+                },
               ]}
               copyright={
                 <Fragment>
