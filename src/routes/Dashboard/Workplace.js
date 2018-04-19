@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import moment from 'moment';
 import { connect } from 'dva';
-import { Link } from 'dva/router';
+import { Link, routerRedux } from 'dva/router';
 import { Row, Col, Card, List, Avatar, Button, Table, Divider, Progress, Icon, Popconfirm } from 'antd';
 
 import { Radar } from 'components/Charts';
@@ -64,11 +64,13 @@ export default class Workplace extends PureComponent {
   }
 
   handleCreateEleCrawler = () => {
-    this.props.history.push('/configCrawler/ele')
+    const { dispatch } = this.props
+    dispatch(routerRedux.push('/configCrawler/ele'))
   }
 
   handleCreateMeituanCrawler = () => {
-    this.props.history.push('/configCrawler/meituan')
+    const { dispatch } = this.props
+    dispatch(routerRedux.push('/configCrawler/meituan'))
   }
 
   render() {

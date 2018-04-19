@@ -29,7 +29,7 @@ function generator({ defaultProps, defaultRules, type }) {
         clearInterval(this.interval);
       }
       onGetCaptcha = () => {
-        let count = 59;
+        let count = 29;
         this.setState({ count });
         if (this.props.onGetCaptcha) {
           this.props.onGetCaptcha();
