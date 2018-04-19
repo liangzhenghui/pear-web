@@ -246,7 +246,7 @@ export default class Analysis extends Component {
           <Col {...topColResponsiveProps}>
             <ChartCard
               bordered={false}
-              title="总销售额"
+              title="月销量"
               action={
                 <Tooltip title="指标说明">
                   <Icon type="info-circle-o" />

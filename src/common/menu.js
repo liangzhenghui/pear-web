@@ -11,7 +11,7 @@ const menuData = [
         path: 'workplace',
         // hideInBreadcrumb: true,
         // hideInMenu: true,
-      },
+      },      
       {
         name: '分析页',
         path: 'analysis',
@@ -21,6 +21,21 @@ const menuData = [
         path: 'monitor',
       },
     ],
+  },
+  {
+    name: '爬虫配置',
+    icon: 'form',
+    path: 'configCrawler',
+    children: [
+      {
+        name: '饿了么',
+        path: 'ele'
+      },
+      {
+        name: '美团外卖',
+        path: 'meituan'
+      }
+    ]
   },
   {
     name: '表单页',

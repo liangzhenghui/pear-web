@@ -117,10 +117,10 @@ export default class GlobalHeader extends PureComponent {
           {currentUser && currentUser.name ? (
             <Dropdown overlay={menu}>
               <span className={`${styles.action} ${styles.account}`}>
-                <Avatar size="small" className={'avatar'} size={'large'} shape={'square'}>
+                <Avatar className={'avatar'} size="small" style={{ backgroundColor: '#87d068' }} icon="user" >
                   {currentUser.name}
                 </Avatar>
-                <span className={styles.name}>{currentUser.name}</span>
+                <span className={styles.name} style={{marginLeft:16, verticalAlign:'middle'}}>{currentUser.name}</span>
               </span>
             </Dropdown>
           ) : (

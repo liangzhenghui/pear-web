@@ -5,8 +5,9 @@ export async function queryProjectNotice() {
   return request('/api/project/notice');
 }
 
+// 返回当前用户的爬虫数据
 export async function queryActivities() {
-  return request('/api/activities');
+  return request('/user/activity');
 }
 
 export async function queryRule(params) {
@@ -77,3 +78,6 @@ export async function register(params) {
 export async function queryNotices() {
   return request('/api/notices');
 }
+
+
+

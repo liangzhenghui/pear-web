@@ -70,13 +70,18 @@ function getFlatMenuData(menus) {
 export const getRouterData = app => {
   const routerConfig = {
     '/': {
-      component: dynamicWrapper(app, ['user', 'login'], () => import('../layouts/BasicLayout')),
+      component: dynamicWrapper(app, ['user', 'global', 'login'], () => import('../layouts/BasicLayout')),
     },
     '/dashboard/workplace': {
-      component: dynamicWrapper(app, ['project', 'activities', 'chart'], () =>
+      component: dynamicWrapper(app, ['project', 'activities', 'chart', 'user'], () =>
         import('../routes/Dashboard/Workplace')
       ),
     },
+
+    '/configCrawler/:source':{
+      component: dynamicWrapper(app, ['configEleCrawler','configMeituanCrawler'], () => import('../routes/Config/ConfigCrawler')),
+    },
+
     '/dashboard/analysis': {
       component: dynamicWrapper(app, ['chart'], () => import('../routes/Dashboard/Analysis')),
     },
