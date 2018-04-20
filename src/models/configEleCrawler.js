@@ -1,4 +1,4 @@
-import { eleSmsCode, elePicCode, loginEle } from '../services/configCrawler';
+import { eleSmsCode, elePicCode, loginEle, searchRestaurantArea, restaurantListOfArea, submitCrawler } from '../services/configCrawler';
 import { notification } from 'antd'
 import { routerRedux } from 'dva/router'
 
@@ -8,7 +8,8 @@ export default {
     state: {
         needPicCode: false,
         sms_token: null,
-        pic_token: null
+        pic_token: null,
+        restaurantArea: []
     },
 
     effects: {
@@ -59,6 +60,20 @@ export default {
                     message: '图片验证码获取失败'
                 })
             }
+        },
+        *getRestaurantArea({ payload: { key } }, { call, put }) {
+            const resp = yield call(searchRestaurantArea, key)
+            yield put({
+                type: 'saveRestaurantArea',
+                payload: resp
+            })
+        },
+        *getRestaurantInfo({ payload }, { call, put }) {
+            const resp = yield call(restaurantListOfArea, payload)
+            yield put({
+                type: 'saveRestaurantListOfArea',
+                payload: resp
+            })
         }
     },
 
@@ -80,6 +95,26 @@ export default {
                 ...state,
                 pic_token: payload.ele_image_token,
                 pic_base64: payload.ele_image_base64
+            }
+        },
+        resetStep1(state, action) {
+            return {
+                ...state,
+                needPicCode: false,
+                sms_token: null,
+                pic_token: null
+            }
+        },
+        saveRestaurantArea(state, action) {
+            return {
+                ...state,
+                restaurantArea: action.payload
+            }
+        },
+        saveRestaurantListOfArea(state, action){
+            return {
+                ...state,
+                restaurantListOfArea:action.payload
             }
         }
     }

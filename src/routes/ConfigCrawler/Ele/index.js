@@ -44,8 +44,8 @@ export default class ConfigCrawlerEle extends Component {
                 <Card bordered={false}>
                     <Fragment>
                         <Steps current={this.getCurrentStep()} className={styles.steps}>
-                            <Step title="登录平台" />
-                            <Step title="确认转账信息" />
+                            <Step title="登录饿了么" />
+                            <Step title="选择商家" />
                             <Step title="完成" />
                         </Steps>
                         <Switch>

@@ -1,7 +1,7 @@
 {
-  "name": "ant-design-pro",
+  "name": "pear-web",
   "version": "1.2.1",
-  "description": "An out-of-box UI solution for enterprise applications",
+  "description": "数据分析与爬取前端应用",
   "private": true,
   "scripts": {
     "precommit": "npm run lint-staged",

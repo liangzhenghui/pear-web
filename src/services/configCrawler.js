@@ -14,6 +14,18 @@ export async function loginEle(mobile, sms_code, sms_token) {
     return request(`/${ele_config}/login_ele?mobile=${mobile}&sms_code=${sms_code}&sms_token=${sms_token}`);
 }
 
-export async function loginMeituan() {
-    return request('/configMeituan/sms_code');
+
+export async function searchRestaurantArea(key) {
+    return request(`/${ele_config}/search_address?key=${key}`)
+}
+
+export async function restaurantListOfArea(params) {
+    return request(`/${ele_config}/get_restaurants`, {
+        method: 'POST',
+        body: params
+    })
+}
+
+export async function submitCrawler() {
+    return request('/')
 }
