@@ -9,52 +9,24 @@ class Step3 extends React.PureComponent {
   render() {
     const { dispatch, data } = this.props;
     const onFinish = () => {
-      dispatch(routerRedux.push('/form/step-form'));
-    };
-    const information = (
-      <div className={styles.information}>
-        <Row>
-          <Col span={8} className={styles.label}>
-            付款账户：
-          </Col>
-          <Col span={16}>{data.payAccount}</Col>
-        </Row>
-        <Row>
-          <Col span={8} className={styles.label}>
-            收款账户：
-          </Col>
-          <Col span={16}>{data.receiverAccount}</Col>
-        </Row>
-        <Row>
-          <Col span={8} className={styles.label}>
-            收款人姓名：
-          </Col>
-          <Col span={16}>{data.receiverName}</Col>
-        </Row>
-        <Row>
-          <Col span={8} className={styles.label}>
-            转账金额：
-          </Col>
-          <Col span={16}>
-            <span className={styles.money}>{data.amount}</span> 元
-          </Col>
-        </Row>
-      </div>
-    );
+      dispatch(routerRedux.push('/configCrawler/ele/confirm'));
+    }
+    const onBack = () => {
+      dispatch(routerRedux.push('/'));
+    }
     const actions = (
       <Fragment>
         <Button type="primary" onClick={onFinish}>
-          再转一笔
+          再提交一个
         </Button>
-        <Button>查看账单</Button>
+        <Button onClick={onBack}>查看任务</Button>
       </Fragment>
     );
     return (
       <Result
         type="success"
         title="操作成功"
-        description="预计两小时内到账"
-        extra={information}
+        description=""
         actions={actions}
         className={styles.result}
       />

@@ -1,4 +1,4 @@
-import { eleSmsCode, elePicCode, loginEle, searchRestaurantArea, restaurantListOfArea, submitCrawler } from '../services/configCrawler';
+import { eleSmsCode, elePicCode, loginEle, searchRestaurantArea, restaurantListOfArea, commitCrawler, cityName, cities } from '../services/configCrawler';
 import { notification } from 'antd'
 import { routerRedux } from 'dva/router'
 
@@ -9,7 +9,8 @@ export default {
         needPicCode: false,
         sms_token: null,
         pic_token: null,
-        restaurantArea: []
+        restaurantArea: [],
+        restaurantListOfArea: []
     },
 
     effects: {
@@ -61,8 +62,8 @@ export default {
                 })
             }
         },
-        *getRestaurantArea({ payload: { key } }, { call, put }) {
-            const resp = yield call(searchRestaurantArea, key)
+        *getRestaurantArea({ payload: { key, lat, lng } }, { call, put }) {
+            const resp = yield call(searchRestaurantArea, key, lat, lng)
             yield put({
                 type: 'saveRestaurantArea',
                 payload: resp
@@ -72,6 +73,24 @@ export default {
             const resp = yield call(restaurantListOfArea, payload)
             yield put({
                 type: 'saveRestaurantListOfArea',
+                payload: resp
+            })
+        },
+        *commitTask({ payload }, { call, put }) {
+            const resp = yield call(commitCrawler, payload)
+            if (resp.success) {
+                notification.success(
+                    {
+                        message: '爬虫任务提交成功'
+                    }
+                )
+                yield put(routerRedux.push('/configCrawler/ele/result'))
+            }
+        },
+        *fetchCities(_, { call, put }) {
+            const resp = yield call(cities)
+            yield put({
+                type: 'saveCities',
                 payload: resp
             })
         }
@@ -106,15 +125,24 @@ export default {
             }
         },
         saveRestaurantArea(state, action) {
+            const area = state.restaurantArea.concat(action.payload)
             return {
                 ...state,
-                restaurantArea: action.payload
+                restaurantArea: area,
+                restaurantListOfArea: []
             }
         },
-        saveRestaurantListOfArea(state, action){
+        saveRestaurantListOfArea(state, action) {
+            const restaurants = state.restaurantListOfArea.concat(action.payload)
             return {
                 ...state,
-                restaurantListOfArea:action.payload
+                restaurantListOfArea: restaurants,
+            }
+        },
+        saveCities(state, action) {
+            return {
+                ...state,
+                cities: action.payload
             }
         }
     }

@@ -15,8 +15,8 @@ export async function loginEle(mobile, sms_code, sms_token) {
 }
 
 
-export async function searchRestaurantArea(key) {
-    return request(`/${ele_config}/search_address?key=${key}`)
+export async function searchRestaurantArea(key, lat, lng) {
+    return request(`/${ele_config}/search_address?key=${key}&lat=${lat}&lng=${lng}`)
 }
 
 export async function restaurantListOfArea(params) {
@@ -26,6 +26,13 @@ export async function restaurantListOfArea(params) {
     })
 }
 
-export async function submitCrawler() {
-    return request('/')
+export async function commitCrawler(params) {
+    return request('/crawler_tasks?source=ele', {
+        method: 'POST',
+        body: params
+    })
+}
+
+export async function cities() {
+    return request(`/${ele_config}/cities`)
 }

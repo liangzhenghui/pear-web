@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import moment from 'moment';
 import { connect } from 'dva';
 import { Link, routerRedux } from 'dva/router';
-import { Row, Col, Card, List, Avatar, Button, Table, Divider, Progress, Icon, Popconfirm } from 'antd';
+import { Row, Col, Card, List, Avatar, Button, Table, Divider, Progress, Icon, Popconfirm, Spin } from 'antd';
 
 import { Radar } from 'components/Charts';
 import EditableLinkGroup from 'components/EditableLinkGroup';
@@ -19,13 +19,14 @@ const columns = [
   },
   { title: '商家名称', dataIndex: 'name', key: 'name', render: (text, record) => <p><a href="#"> {record.restaurant.name}</a> </p> },
   { title: '数据类型', dataIndex: 'type', key: 'type', render: (text) => <p><a href="#">{CRAWLER_TYPES[text]}</a></p> },
-  { title: '爬取数据量', dataIndex: 'total', key: 'total' },
-  { title: '当前完成量', dataIndex: 'count', key: 'count' },
+  { title: '爬取数据量', dataIndex: 'count', key: 'count' },
   {
     title: '状态', dataIndex: 'status', key: 'status', render: (text, record) =>
-      <Progress type="circle" width={48} percent={record.count / record.total * 100}
-        status={record.status > 1 ? 'exception' : record.status === 1 ? 'success' : 'active'}
-      />
+      <div style={{ textAlign: 'center' }}>
+        {record.status === 0 ? <Spin /> :
+          <Progress type="circle" showInfo={true} width={50} status={record.status === 2 ? 'exception' : 'success'} />
+        }
+      </div>
   },
   {
     title: '创建--完成时间', dataIndex: 'finished', key: 'finished', render: (text, record) => {
@@ -33,18 +34,6 @@ const columns = [
     }
   },
   { title: '操作', dataIndex: 'action', key: 'action' }
-  // {
-  //   title: '操作', dataIndex: 'action', key: 'action', render: (text, record) => {
-  //     return (
-  //       this.state.dataSource.length > 1 ?
-  //         (
-  //           <Popconfirm title="Sure to delete?" onConfirm={() => this.onDelete(record.key)}>
-  //             <a href="javascript:;">Delete</a>
-  //           </Popconfirm>
-  //         ) : null
-  //     );
-  //   },
-  // }
 ]
 
 @connect(({ activities, loading, user }) => ({
@@ -148,25 +137,11 @@ export default class Workplace extends PureComponent {
               style={{ marginBottom: 24 }}
               title="爬虫列表"
               bordered={false}
-              extra={<Link to="/">查看全部</Link>}
+              extra={<Link to="/dashboard/monitor">查看全部</Link>}
               loading={activitiesLoading}
               bodyStyle={{ padding: 32 }}
             >
               <Table columns={columns} dataSource={crawlers_data} pagination={false}
-              // expandedRowRender={record => {
-              //   const { restaurant } = record
-              //   {
-              //     return restaurant ?
-              //       <div>
-              //         <Icon type="home" style={{ marginRight: 8, color: "#00BFFF" }} />
-              //         <span>{restaurant.name}</span>
-              //       </div>
-              //       : <div>
-              //         <Icon type="frown-o" style={{ marginRight: 8, color: "#ff4d4f" }} />
-              //         未获取到商家名称
-              //         </div>
-              //   }
-              // }} 
               />
             </Card>
           </Col>

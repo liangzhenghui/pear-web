@@ -136,7 +136,7 @@ const proxy = {
     });
   },
 };
-const api = 'http://192.168.0.103:7777/';
+const api = 'http://192.168.0.104:7777/';
 const product = {
   'GET /*': api,
   'POST /*': api,

@@ -18,21 +18,20 @@ const formItemLayout = {
 
 @Form.create()
 class Step1 extends React.PureComponent {
-  constructor(props){
+  constructor(props) {
     super(props)
     this.state = {
-      mobileNotMatch: true
+      mobileNotMatch: null
     }
   }
 
   handleMobileInput = (event) => {
-    console.log('input:', event.target.value)
     const mobile = event.target.value
-    if(mobile.length === 11){
+    if (mobile.length === 11) {
       this.setState({
         mobileNotMatch: false
       })
-    }else {
+    } else {
       this.setState({
         mobileNotMatch: true
       })
@@ -43,7 +42,7 @@ class Step1 extends React.PureComponent {
     const { form, dispatch, needPicCode, loginLoading, getEleSmsCodeLoading, getElePicCodeLoading } = this.props
     const { getFieldDecorator, validateFields } = form
     const { sms_token, pic_base64 } = this.props
-    const {mobileNotMatch} = this.state
+    const { mobileNotMatch } = this.state
 
     const onValidateForm = () => {
       validateFields((err, values) => {
@@ -67,7 +66,6 @@ class Step1 extends React.PureComponent {
         fileds.push('pic_code')
       }
       validateFields(fileds, (err, values) => {
-        console.log(values)
         if (!err) {
           const payload = {
             mobile: values.mobile
@@ -101,15 +99,18 @@ class Step1 extends React.PureComponent {
       <Fragment>
         <Form layout="horizontal"
           className={styles.stepForm} hideRequiredMark
-          style={{margin:"60px auto 60px"}}>
+          style={{ margin: "60px auto 60px" }}>
           <Form.Item {...formItemLayout} label="手机号">
             {getFieldDecorator('mobile', {
               rules: [{ required: true, message: '请输入手机号' }],
             })(<Input placeholder="手机号" onChange={this.handleMobileInput} />)}
-            <Alert
-              message={mobileNotMatch ? 'error' : 'success'}
-              type={mobileNotMatch ? 'error' : 'success'}
-              showIcon />
+            {mobileNotMatch !== null ?
+              <Alert
+                message={mobileNotMatch ? 'error' : 'success'}
+                type={mobileNotMatch ? 'error' : 'success'}
+                showIcon />
+              : ''
+            }
           </Form.Item>
           {needPicCode &&
             <Form.Item {...formItemLayout} label="图片验证码">
@@ -125,7 +126,7 @@ class Step1 extends React.PureComponent {
                   <img src={pic_base64} />
                 </Col>
                 <Col span={4}>
-                  <Button style={{marginLeft:6}} loading={getElePicCodeLoading} onClick={refreshPicCode}>获取/刷新</Button>
+                  <Button style={{ marginLeft: 6 }} loading={getElePicCodeLoading} onClick={refreshPicCode}>获取/刷新</Button>
                 </Col>
               </Row>
             </Form.Item>}
@@ -143,7 +144,7 @@ class Step1 extends React.PureComponent {
                   disabled={mobileNotMatch}
                   loading={getEleSmsCodeLoading}
                   onClick={handleGetSmsCode}
-                  >获取验证码</Button>
+                >获取验证码</Button>
               </Col>
             </Row>
           </Form.Item>
