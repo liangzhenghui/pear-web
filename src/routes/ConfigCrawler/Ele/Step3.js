@@ -7,7 +7,7 @@ import styles from './style.less';
 
 class Step3 extends React.PureComponent {
   render() {
-    const { dispatch, data } = this.props;
+    const { dispatch } = this.props;
     const onFinish = () => {
       dispatch(routerRedux.push('/configCrawler/ele/confirm'));
     };
@@ -34,6 +34,4 @@ class Step3 extends React.PureComponent {
   }
 }
 
-export default connect(({ form }) => ({
-  data: form.step,
-}))(Step3);
+export default connect()(Step3);

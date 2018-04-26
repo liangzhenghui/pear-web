@@ -7,3 +7,11 @@ export async function dishDistribution(crawlerId) {
 export async function wordCount(crawlerId) {
   return request(`/analyse/rating_word_cloud/${crawlerId}`);
 }
+
+export async function compareTwoCrawler(crawlerId_1, crawlerId_2) {
+  return request(`/analyse/compare/${crawlerId_1}/${crawlerId_2}`);
+}
+
+export async function compareAll(){
+  return request('/analyse/compare_all')
+}

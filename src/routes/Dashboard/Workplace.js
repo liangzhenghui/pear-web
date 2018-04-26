@@ -7,6 +7,8 @@ import { Radar } from 'components/Charts';
 import EditableLinkGroup from 'components/EditableLinkGroup';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import { APP_NAME, CRAWLER_TYPES } from '../../utils/const';
+import ReactEcharts from 'echarts-for-react';
+import WaterWave from '../../components/Charts/WaterWave'
 
 import styles from './Workplace.less';
 
@@ -16,11 +18,22 @@ import styles from './Workplace.less';
   user: user.currentUser,
 }))
 export default class Workplace extends PureComponent {
-  componentDidMount() {
+  componentWillMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'activities/fetchList',
+      type: 'activities/fetchList'
     });
+    dispatch({
+      type: 'activities/fetchCompareAllData'
+    })
+  }
+
+  componentDidMount() {
+    const { dispatch } = this.props
+    dispatch({
+      type: 'global/changeLayoutCollapsed',
+      payload: true
+    })
   }
 
   handleCreateEleCrawler = () => {
@@ -36,14 +49,14 @@ export default class Workplace extends PureComponent {
   render() {
     const { activitiesLoading, user, dispatch } = this.props;
     const { visitor_count, used_days } = user;
-    const { crawlers, actions } = this.props.activities;
+    const { crawlers, actions, compareData } = this.props.activities;
     const crawlers_data = crawlers.data
       ? crawlers.data.map((value, index) => {
-          return {
-            ...value,
-            key: index,
-          };
-        })
+        return {
+          ...value,
+          key: index,
+        };
+      })
       : [];
 
     const pageHeaderContent = (
@@ -107,14 +120,14 @@ export default class Workplace extends PureComponent {
             {record.status === 0 ? (
               <Spin indicator={<Icon type="loading" style={{ fontSize: 24 }} spin />} />
             ) : (
-              <Progress
-                type="circle"
-                showInfo={true}
-                percent={100}
-                width={30}
-                status={record.status === 2 ? 'exception' : 'success'}
-              />
-            )}
+                <Progress
+                  type="circle"
+                  showInfo={true}
+                  percent={100}
+                  width={30}
+                  status={record.status === 2 ? 'exception' : 'success'}
+                />
+              )}
           </div>
         ),
       },
@@ -143,7 +156,7 @@ export default class Workplace extends PureComponent {
             <Button
               disabled={record.status !== 1}
               onClick={() => {
-                dispatch(routerRedux.push(`/dashboard/analysis/${record.id}`));
+                dispatch(routerRedux.push(`/analy/normal/${record.id}`));
               }}
               type="primary"
             >
@@ -153,6 +166,103 @@ export default class Workplace extends PureComponent {
         ),
       },
     ];
+
+    const restaurantOption = {
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'shadow'
+        }
+      },
+      legend: {
+        data: ['月销量', '评分', '商品数', '起送费', '送达时间']
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+      },
+      xAxis: {
+        type: 'value'
+      },
+      yAxis: {
+        type: 'category',
+        data: Object.keys(compareData)
+      },
+      series: [
+        {
+          name: '月销量',
+          type: 'bar',
+          stack: '总量',
+          label: {
+            normal: {
+              show: true,
+              position: 'insideRight'
+            }
+          },
+          data: Object.keys(compareData).map(key => {
+            return compareData[key].sales
+          })
+        },
+        {
+          name: '评分',
+          type: 'bar',
+          stack: '总量',
+          label: {
+            normal: {
+              show: true,
+              position: 'insideRight'
+            }
+          },
+          data: Object.keys(compareData).map(key => {
+            return compareData[key].score
+          })
+        },
+        {
+          name: '商品数',
+          type: 'bar',
+          stack: '总量',
+          label: {
+            normal: {
+              show: true,
+              position: 'insideRight'
+            }
+          },
+          data: Object.keys(compareData).map(key => {
+            return compareData[key].dish_total
+          })
+        },
+        {
+          name: '起送费',
+          type: 'bar',
+          stack: '总量',
+          label: {
+            normal: {
+              show: true,
+              position: 'insideRight'
+            }
+          },
+          data: Object.keys(compareData).map(key => {
+            return compareData[key].send_fee
+          })
+        },
+        {
+          name: '送达时间',
+          type: 'bar',
+          stack: '总量',
+          label: {
+            normal: {
+              show: true,
+              position: 'insideRight'
+            }
+          },
+          data: Object.keys(compareData).map(key => {
+            return compareData[key].arrive_time
+          })
+        }
+      ]
+    }
 
     return (
       <PageHeaderLayout content={pageHeaderContent} extraContent={extraContent}>
@@ -188,6 +298,15 @@ export default class Workplace extends PureComponent {
                 新建美团外卖爬虫
               </Button>
             </Card>
+
+            <Card bodyStyle={{ textAlign: "center" }} loading={activitiesLoading}>
+              <WaterWave
+                loading={activitiesLoading}
+                title="爬虫任务完成"
+                height={200}
+                percent={(crawlers.done_total / crawlers.crawler_total * 100).toFixed(1)}
+              />
+            </Card>
           </Col>
           <Col xl={18} lg={24} md={24} sm={24} xs={24}>
             <Card
@@ -195,13 +314,40 @@ export default class Workplace extends PureComponent {
               style={{ marginBottom: 24 }}
               title="爬虫列表"
               bordered={false}
-              extra={<Link to="/dashboard/monitor">查看全部</Link>}
+              extra={<Link to="/dashboard/monitor">更多操作</Link>}
               loading={activitiesLoading}
               bodyStyle={{ padding: 32 }}
             >
-              <Table columns={crawlerColumns} dataSource={crawlers_data} pagination={false} />
+              <Table
+                columns={crawlerColumns}
+                dataSource={crawlers_data}
+                pagination={{ pageSize: 5 }} />
             </Card>
           </Col>
+        </Row>
+        <Row style={{ marginTop: 20 }}>
+          <Card bodyStyle={{ maxHeight: 500 }} title="商家整体数据">
+            <ReactEcharts option={restaurantOption} />
+          </Card>
+        </Row>
+        <Row style={{ marginTop: 20 }}>
+          <Card bodyStyle={{ maxHeight: 500, overflow: 'auto' }} title="操作记录">
+            <List
+              dataSource={actions.data}
+              renderItem={item => (
+                <List.Item>
+                  <List.Item.Meta
+                    avatar={
+                      <Avatar
+                        style={{ backgroundColor: '#87d068' }}
+                        icon="user" />}
+                    title={`${item.action_name}`}
+                    description={`${item.created} ${item.action_args || ''}`}
+                  />
+                </List.Item>
+              )}
+            />
+          </Card>
         </Row>
       </PageHeaderLayout>
     );

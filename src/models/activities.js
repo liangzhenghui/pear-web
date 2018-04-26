@@ -1,4 +1,5 @@
 import { queryActivities, requestRestaurant } from '../services/api';
+import { compareAll } from '../services/analyse'
 
 export default {
   namespace: 'activities',
@@ -7,7 +8,8 @@ export default {
     crawlers: {
       crawler_total: 0
     },
-    actions: {}
+    actions: {},
+    compareData: {}
   },
 
   effects: {
@@ -18,6 +20,13 @@ export default {
         payload: response,
       });
     },
+    *fetchCompareAllData(_, { call, put }) {
+      const resp = yield call(compareAll)
+      yield put({
+        type: 'saveCompareAllData',
+        payload: resp
+      })
+    }
   },
 
   reducers: {
@@ -27,5 +36,11 @@ export default {
         ...action.payload,
       };
     },
+    saveCompareAllData(state, { payload }) {
+      return {
+        ...state,
+        compareData: payload
+      }
+    }
   },
 };

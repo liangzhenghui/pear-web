@@ -31,11 +31,13 @@ import Trend from 'components/Trend';
 import NumberInfo from 'components/NumberInfo';
 import { getTimeDistance } from '../../utils/utils';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
-import styles from './Analysis.less';
+import styles from './Normal.less';
 import DescriptionList from '../../components/DescriptionList';
 import spider from '../../assets/spider.jpg';
 import ReactEcharts from 'echarts-for-react';
 import { queryCrawlers } from '../../services/crawler';
+import { wordCount } from '../../services/analyse';
+import { WORD_MAP } from '../../utils/const'
 
 const { TabPane } = Tabs;
 const { RangePicker } = DatePicker;
@@ -43,7 +45,7 @@ const { Description } = DescriptionList;
 
 @connect(({ chart, loading }) => ({
   chart,
-  loadingWordCount: loading.effects['chart/fetchWordCount'],
+  loadingWordCount: loading.effects['chart/fetchWordCloud'],
 }))
 export default class Analysis extends Component {
   componentDidMount() {
@@ -58,7 +60,7 @@ export default class Analysis extends Component {
       crawlerId,
     });
     dispatch({
-      type: 'chart/fetchWordCount',
+      type: 'chart/fetchWordCloud',
       crawlerId,
     });
   }
@@ -72,11 +74,11 @@ export default class Analysis extends Component {
 
   render() {
     const { chart, loadingWordCount } = this.props;
-    const { crawlerData, analyDish, wordCount } = chart;
+    const { crawlerData, analyDish, wordCloudImages } = chart;
 
     if (!crawlerData || !analyDish) {
       return (
-        <div>
+        <div style={{ margin: '0 auto' }}>
           <Spin />
         </div>
       );
@@ -152,10 +154,10 @@ export default class Analysis extends Component {
         dataIndex: 'moth_sales',
         key: 'moth_sales',
         sorter: (a, b) => a.moth_sales - b.moth_sales,
-      },
+      }
     ];
 
-    // 销量分布
+    // 销量统计
     const salesOption = {
       title: {
         text: '各商品月销量',
@@ -203,10 +205,10 @@ export default class Analysis extends Component {
       ],
     };
 
-    // 评分统计分布
+    // 评分统计统计
     const rateScoreOption = {
       title: {
-        text: '商品平均评分分布',
+        text: '商家商品平均评分统计统计',
       },
       toolbox: {
         feature: {
@@ -240,13 +242,13 @@ export default class Analysis extends Component {
             },
           },
         },
-      ],
+      ]
     };
 
-    // 评论数随价格分布
+    // 评论数随价格统计
     const rateCountWithPriceOption = {
       title: {
-        text: '评论数随价格分布',
+        text: '评论数随价格统计',
       },
       tooltip: {
         trigger: 'axis',
@@ -297,10 +299,10 @@ export default class Analysis extends Component {
       ],
     };
 
-    // 评论数随时间分布
+    // 评论数随时间统计
     const rateCountWithDateOption = {
       title: {
-        text: '评论数随日期分布',
+        text: '评论数随日期统计',
       },
       tooltip: {
         trigger: 'axis',
@@ -409,13 +411,19 @@ export default class Analysis extends Component {
           </Col>
         </Row>
 
-        <Row style={{ marginBottom: 20 }}>
+        <Row style={{ marginTop: 10 }}>
+          <Card loading={loadingWordCount} title="评价词云" bodyStyle={{ textAlign: 'center' }}>
+            {wordCloudImages ? <img style={{ maxWidth: '600px' }} alt="" src={wordCloudImages.total_image} /> : ""}
+          </Card>
+        </Row>
+
+        <Row style={{ marginTop: 10 }}>
           <Card>
             <Table columns={dishTableColumns} dataSource={dish.data} />
           </Card>
         </Row>
 
-        <Row style={{ marginBottom: 20 }}>
+        <Row style={{ marginTop: 10 }}>
           <Card>
             <ReactEcharts option={salesOption} style={{ height: 600 }} />
           </Card>
@@ -436,19 +444,6 @@ export default class Analysis extends Component {
         <Row style={{ marginTop: 10 }}>
           <Card>
             <ReactEcharts option={rateCountWithDateOption} style={{ height: 600 }} />
-          </Card>
-        </Row>
-        <Row style={{ marginTop: 10 }}>
-          <Card loading={loadingWordCount}>
-            <TagCloud
-              data={Object.keys(wordCount).map(key => {
-                return {
-                  name: key,
-                  value: wordCount[key] * 10000 + 20,
-                };
-              })}
-              height={200}
-            />
           </Card>
         </Row>
       </PageHeaderLayout>

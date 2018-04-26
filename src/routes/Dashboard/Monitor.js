@@ -12,6 +12,7 @@ import {
   Pagination,
   Button,
   Popconfirm,
+  Tag
 } from 'antd';
 import numeral from 'numeral';
 import { Pie, WaterWave, Gauge, TagCloud } from 'components/Charts';
@@ -35,6 +36,7 @@ export default class Monitor extends PureComponent {
     this.state = {
       crawlerPage: 1,
       crawlerPerPage: 8,
+      selectedCrawlers: []
     };
   }
 
@@ -51,6 +53,9 @@ export default class Monitor extends PureComponent {
         per_page: perPage,
       },
     });
+    this.setState({
+      selectedCrawlers: []
+    })
   };
 
   handleCrawlerTablePageChange = (page, pageSize) => {
@@ -76,9 +81,18 @@ export default class Monitor extends PureComponent {
     });
   };
 
+  onSelectCrawler = (_, selectedCrawlers) => {
+    this.setState({ selectedCrawlers })
+  }
+  goProAnaly = () => {
+    const { selectedCrawlers } = this.state
+    const { dispatch } = this.props
+    dispatch(routerRedux.push(`/analy/pro/${selectedCrawlers[0].id}/${selectedCrawlers[1].id}`))
+  }
+
   render() {
     const { monitor, loading, crawlerListoading, dispatch } = this.props;
-    const { crawlerPage, crawlerPerPage } = this.state;
+    const { crawlerPage, crawlerPerPage, selectedCrawlers } = this.state;
     const { crawlers } = monitor;
     const crawlerColumns = [
       { title: '序号', dataIndex: 'id', key: 'id' },
@@ -108,14 +122,14 @@ export default class Monitor extends PureComponent {
             {record.status === 0 ? (
               <Spin indicator={<Icon type="loading" style={{ fontSize: 24 }} spin />} />
             ) : (
-              <Progress
-                type="circle"
-                showInfo={true}
-                percent={100}
-                width={30}
-                status={record.status === 2 ? 'exception' : 'success'}
-              />
-            )}
+                <Progress
+                  type="circle"
+                  showInfo={true}
+                  percent={100}
+                  width={30}
+                  status={record.status === 2 ? 'exception' : 'success'}
+                />
+              )}
           </div>
         ),
       },
@@ -144,7 +158,7 @@ export default class Monitor extends PureComponent {
             <Button
               disabled={record.status !== 1}
               onClick={() => {
-                dispatch(routerRedux.push(`/dashboard/analysis/${record.id}`));
+                dispatch(routerRedux.push(`/analy/normal/${record.id}`));
               }}
               type="primary"
               style={{ marginRight: 10 }}
@@ -161,6 +175,11 @@ export default class Monitor extends PureComponent {
         ),
       },
     ];
+    const crawlerSelection = {
+      selectedCrawlers,
+      onChange: this.onSelectCrawler,
+      fixed: true
+    }
 
     return (
       <Fragment>
@@ -171,13 +190,25 @@ export default class Monitor extends PureComponent {
             loading={crawlerListoading}
             bodyStyle={{ padding: 32 }}
             extra={
-              <Button
-                loading={crawlerListoading}
-                type="primary"
-                shape="circle"
-                icon="reload"
-                onClick={() => this.fetchCrawlers(crawlerPage, crawlerPerPage)}
-              />
+              <div>
+                <Button
+                  loading={crawlerListoading}
+                  type="primary"
+                  shape="circle"
+                  icon="reload"
+                  onClick={() => this.fetchCrawlers(crawlerPage, crawlerPerPage)}
+                />
+                <Button type="primary"
+                  style={{ marginLeft: 10, marginRight: 10 }}
+                  disabled={selectedCrawlers.length <= 1}
+                  onClick={this.goProAnaly}
+                >
+                  对比分析<Icon type="right" />
+                </Button>
+                {selectedCrawlers.map(item => {
+                  return <Tag color="blue">{item.restaurant.name} </Tag>
+                })}
+              </div>
             }
           >
             <Table
@@ -190,6 +221,7 @@ export default class Monitor extends PureComponent {
                 defaultCurrent: crawlerPage,
                 onChange: this.handleCrawlerTablePageChange,
               }}
+              rowSelection={crawlerSelection}
             />
           </Card>
         </Row>

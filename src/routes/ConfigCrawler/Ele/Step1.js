@@ -210,12 +210,4 @@ const state2props = ({ configEleCrawler, loading }) => {
   };
 };
 
-// export default connect(
-//   ({ configEleCrawler, loading }) => ({
-//     ...configEleCrawler,
-//     getEleSmsCodeLoading: loading.effects['configCraler/getEleSmsCode'],
-//     loginLoading: loading.effects['configCrawler/loginEle']
-//   })
-// )(Step1);
-
 export default connect(state2props)(Step1);

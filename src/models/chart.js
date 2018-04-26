@@ -1,6 +1,6 @@
 import { fakeChartData } from '../services/api';
 import { queryCrawler } from '../services/crawler';
-import { dishDistribution, wordCount } from '../services/analyse';
+import { dishDistribution, wordCount, compareTwoCrawler } from '../services/analyse';
 
 export default {
   namespace: 'chart',
@@ -9,7 +9,10 @@ export default {
     loading: false,
     crawlerData: null,
     analyDish: null,
-    wordCount: {},
+    wordCloudImages: null,
+    compareData: {
+      
+    }
   },
 
   effects: {
@@ -27,13 +30,20 @@ export default {
         analyDish: resp,
       });
     },
-    *fetchWordCount({ crawlerId }, { call, put }) {
+    *fetchWordCloud({ crawlerId }, { call, put }) {
       const resp = yield call(wordCount, crawlerId);
       yield put({
-        type: 'saveWordCount',
-        wordCount: resp,
+        type: 'saveWordCloud',
+        wordCloudImages: resp,
       });
     },
+    *doCompareTwoCrawler({ crawlerId_1, crawlerId_2 }, { call, put }) {
+      const resp = yield call(compareTwoCrawler, crawlerId_1, crawlerId_2)
+      yield put({
+        type: 'saveCompare',
+        payload: resp
+      })
+    }
   },
 
   reducers: {
@@ -45,19 +55,10 @@ export default {
     },
     clear() {
       return {
-        visitData: [],
-        visitData2: [],
-        salesData: [],
-        searchData: [],
-        offlineData: [],
-        offlineChartData: [],
-        salesTypeData: [],
-        salesTypeDataOnline: [],
-        salesTypeDataOffline: [],
-        radarData: [],
         crawlerData: null,
         analyDish: null,
-        wordCount: {},
+        wordCloudImages: null,
+        compareData: {}
       };
     },
     saveCrawler(state, { crawlerData }) {
@@ -72,11 +73,17 @@ export default {
         analyDish,
       };
     },
-    saveWordCount(state, { wordCount }) {
+    saveWordCloud(state, { wordCloudImages }) {
       return {
         ...state,
-        wordCount,
+        wordCloudImages
       };
     },
+    saveCompare(state, { payload }) {
+      return {
+        ...state,
+        compareData: payload
+      }
+    }
   },
 };

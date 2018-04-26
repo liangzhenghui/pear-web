@@ -4,7 +4,6 @@
   "description": "数据分析与爬取前端应用",
   "private": true,
   "scripts": {
-    "precommit": "npm run lint-staged",
     "dev": "cross-env ESLINT=none roadhog dev",
     "start": "cross-env NO_PROXY=true ESLINT=none roadhog dev",
     "build": "cross-env ESLINT=none roadhog build",
