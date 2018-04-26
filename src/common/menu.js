@@ -9,16 +9,14 @@ const menuData = [
       {
         name: '工作台',
         path: 'workplace',
-        // hideInBreadcrumb: true,
-        // hideInMenu: true,
-      },      
-      {
-        name: '分析页',
-        path: 'analysis',
       },
       {
         name: '监控页',
         path: 'monitor',
+      },
+      {
+        name: '分析页',
+        path: 'analysis',
       },
     ],
   },
@@ -29,13 +27,13 @@ const menuData = [
     children: [
       {
         name: '饿了么',
-        path: 'ele'
+        path: 'ele',
       },
       {
         name: '美团外卖',
-        path: 'meituan'
-      }
-    ]
+        path: 'meituan',
+      },
+    ],
   },
   {
     name: '表单页',

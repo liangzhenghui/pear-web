@@ -2,104 +2,13 @@ import React, { PureComponent } from 'react';
 import moment from 'moment';
 import { connect } from 'dva';
 import { Link, routerRedux } from 'dva/router';
-import {
-  Row,
-  Col,
-  Card,
-  List,
-  Avatar,
-  Button,
-  Table,
-  Divider,
-  Progress,
-  Icon,
-  Popconfirm,
-  Spin,
-} from 'antd';
-
+import { Row, Col, Card, List, Avatar, Button, Table, Divider, Progress, Icon, Spin } from 'antd';
 import { Radar } from 'components/Charts';
 import EditableLinkGroup from 'components/EditableLinkGroup';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import { APP_NAME, CRAWLER_TYPES } from '../../utils/const';
 
 import styles from './Workplace.less';
-
-const columns = [
-  { title: '序号', dataIndex: 'id', key: 'id' },
-  {
-    title: '爬取平台',
-    dataIndex: 'type',
-    key: 'source',
-    render: text => <p>{text % 2 == 0 ? '美团外卖' : '饿了么'}</p>,
-  },
-  {
-    title: '商家名称',
-    dataIndex: 'name',
-    key: 'name',
-    render: (text, record) => (
-      <p>
-        <a href="#"> {record.restaurant && record.restaurant.name}</a>{' '}
-      </p>
-    ),
-  },
-  {
-    title: '数据类型',
-    dataIndex: 'type',
-    key: 'type',
-    render: text => (
-      <p>
-        <a href="#">{CRAWLER_TYPES[text]}</a>
-      </p>
-    ),
-  },
-  { title: '爬取数据量', dataIndex: 'count', key: 'count' },
-  {
-    title: '状态',
-    dataIndex: 'status',
-    key: 'status',
-    render: (text, record) => (
-      <div style={{ textAlign: 'center' }}>
-        {record.status === 0 ? (
-          <Spin />
-        ) : (
-          <Progress
-            type="circle"
-            showInfo={true}
-            width={50}
-            status={record.status === 2 ? 'exception' : 'success'}
-          />
-        )}
-      </div>
-    ),
-  },
-  {
-    title: '创建--完成时间',
-    dataIndex: 'finished',
-    key: 'finished',
-    render: (text, record) => {
-      return (
-        <div>
-          {record.created}
-          <div>
-            <Icon type="arrow-down" />
-          </div>
-          {record.finished}
-        </div>
-      );
-    },
-  },
-  {
-    title: '操作',
-    dataIndex: 'action',
-    key: 'action',
-    render: (_, record) => (
-      <div>
-        <Link to="">查看</Link>
-        <Link to="">删除</Link>
-      </div>
-    ),
-  },
-];
 
 @connect(({ activities, loading, user }) => ({
   activities: activities,
@@ -114,8 +23,6 @@ export default class Workplace extends PureComponent {
     });
   }
 
-  componentWillUnmount() {}
-
   handleCreateEleCrawler = () => {
     const { dispatch } = this.props;
     dispatch(routerRedux.push('/configCrawler/ele'));
@@ -127,8 +34,7 @@ export default class Workplace extends PureComponent {
   };
 
   render() {
-    const { activitiesLoading, user } = this.props;
-
+    const { activitiesLoading, user, dispatch } = this.props;
     const { visitor_count, used_days } = user;
     const { crawlers, actions } = this.props.activities;
     const crawlers_data = crawlers.data
@@ -161,7 +67,6 @@ export default class Workplace extends PureComponent {
         </div>
       </div>
     );
-
     const extraContent = (
       <div className={styles.extraContent}>
         <div className={styles.statItem}>
@@ -174,6 +79,80 @@ export default class Workplace extends PureComponent {
         </div>
       </div>
     );
+    const crawlerColumns = [
+      { title: '序号', dataIndex: 'id', key: 'id' },
+      {
+        title: '爬取平台',
+        dataIndex: 'type',
+        key: 'source',
+        render: text => <p>{text % 2 == 0 ? '美团外卖' : '饿了么'}</p>,
+      },
+      {
+        title: '商家名称',
+        dataIndex: 'name',
+        key: 'name',
+        render: (text, record) => (
+          <p>
+            <a href="#"> {record.restaurant && record.restaurant.name}</a>{' '}
+          </p>
+        ),
+      },
+      { title: '爬取数据量', dataIndex: 'count', key: 'count' },
+      {
+        title: '状态',
+        dataIndex: 'status',
+        key: 'status',
+        render: (text, record) => (
+          <div>
+            {record.status === 0 ? (
+              <Spin indicator={<Icon type="loading" style={{ fontSize: 24 }} spin />} />
+            ) : (
+              <Progress
+                type="circle"
+                showInfo={true}
+                percent={100}
+                width={30}
+                status={record.status === 2 ? 'exception' : 'success'}
+              />
+            )}
+          </div>
+        ),
+      },
+      {
+        title: '创建--完成时间',
+        dataIndex: 'finished',
+        key: 'finished',
+        render: (text, record) => {
+          return (
+            <div>
+              {record.created}
+              <div>
+                <Icon type="arrow-down" />
+              </div>
+              {record.finished}
+            </div>
+          );
+        },
+      },
+      {
+        title: '操作',
+        dataIndex: 'action',
+        key: 'action',
+        render: (_, record) => (
+          <div>
+            <Button
+              disabled={record.status !== 1}
+              onClick={() => {
+                dispatch(routerRedux.push(`/dashboard/analysis/${record.id}`));
+              }}
+              type="primary"
+            >
+              查看
+            </Button>
+          </div>
+        ),
+      },
+    ];
 
     return (
       <PageHeaderLayout content={pageHeaderContent} extraContent={extraContent}>
@@ -209,20 +188,6 @@ export default class Workplace extends PureComponent {
                 新建美团外卖爬虫
               </Button>
             </Card>
-            {/* <Card bodyStyle={{ paddingTop: 12, paddingBottom: 12 }} bordered={false} title="团队">
-              <div className={styles.members}>
-                <Row gutter={48}>
-                  {members.map(item => (
-                    <Col span={12} key={`members-item-${item.id}`}>
-                      <Link to={item.link}>
-                        <Avatar src={item.logo} size="small" />
-                        <span className={styles.member}>{item.title}</span>
-                      </Link>
-                    </Col>
-                  ))}
-                </Row>
-              </div>
-            </Card> */}
           </Col>
           <Col xl={18} lg={24} md={24} sm={24} xs={24}>
             <Card
@@ -234,7 +199,7 @@ export default class Workplace extends PureComponent {
               loading={activitiesLoading}
               bodyStyle={{ padding: 32 }}
             >
-              <Table columns={columns} dataSource={crawlers_data} pagination={false} />
+              <Table columns={crawlerColumns} dataSource={crawlers_data} pagination={false} />
             </Card>
           </Col>
         </Row>

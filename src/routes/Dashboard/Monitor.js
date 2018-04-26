@@ -39,8 +39,7 @@ export default class Monitor extends PureComponent {
   }
 
   componentDidMount() {
-    const { crawlerPage, crawlerPerPage } = this.state;
-    this.fetchCrawlers(crawlerPage, crawlerPerPage);
+    this.fetchCrawlers(this.state.crawlerPage, this.state.crawlerPerPage);
   }
 
   fetchCrawlers = (page, perPage) => {
@@ -69,6 +68,14 @@ export default class Monitor extends PureComponent {
     });
   };
 
+  fetchCrawlerStatus = crawlerId => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'monitor/fetchCrawlerStatus',
+      crawlerId,
+    });
+  };
+
   render() {
     const { monitor, loading, crawlerListoading, dispatch } = this.props;
     const { crawlerPage, crawlerPerPage } = this.state;
@@ -88,16 +95,6 @@ export default class Monitor extends PureComponent {
         render: (text, record) => (
           <p>
             <a href="#"> {record.restaurant && record.restaurant.name}</a>{' '}
-          </p>
-        ),
-      },
-      {
-        title: '数据类型',
-        dataIndex: 'type',
-        key: 'type',
-        render: text => (
-          <p>
-            <a href="#">{CRAWLER_TYPES[text]}</a>
           </p>
         ),
       },
@@ -147,7 +144,7 @@ export default class Monitor extends PureComponent {
             <Button
               disabled={record.status !== 1}
               onClick={() => {
-                dispatch(routerRedux.push(`/analysis/${record.id}`));
+                dispatch(routerRedux.push(`/dashboard/analysis/${record.id}`));
               }}
               type="primary"
               style={{ marginRight: 10 }}
@@ -173,6 +170,15 @@ export default class Monitor extends PureComponent {
             bordered={false}
             loading={crawlerListoading}
             bodyStyle={{ padding: 32 }}
+            extra={
+              <Button
+                loading={crawlerListoading}
+                type="primary"
+                shape="circle"
+                icon="reload"
+                onClick={() => this.fetchCrawlers(crawlerPage, crawlerPerPage)}
+              />
+            }
           >
             <Table
               columns={crawlerColumns}

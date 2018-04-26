@@ -10,10 +10,10 @@ class Step3 extends React.PureComponent {
     const { dispatch, data } = this.props;
     const onFinish = () => {
       dispatch(routerRedux.push('/configCrawler/ele/confirm'));
-    }
+    };
     const onBack = () => {
       dispatch(routerRedux.push('/'));
-    }
+    };
     const actions = (
       <Fragment>
         <Button type="primary" onClick={onFinish}>

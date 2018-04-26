@@ -1,5 +1,5 @@
 import { queryTags } from '../services/api';
-import { queryCrawlers, doDeleteCrawler } from '../services/crawler';
+import { queryCrawlers, doDeleteCrawler, queryCrawlerStatus } from '../services/crawler';
 import { notification } from 'antd';
 
 export default {
@@ -26,7 +26,15 @@ export default {
         message: '删除成功',
       });
       yield put({
-        type: 'updateCrawlers',
+        type: 'saveDeleteCrawlers',
+        crawlerId,
+      });
+    },
+    *fetchCrawlerStatus({ crawlerId }, { call, put }) {
+      const resp = yield call(queryCrawlerStatus, crawlerId);
+      yield put({
+        type: 'updateCrawlerStatus',
+        resp,
         crawlerId,
       });
     },
@@ -42,7 +50,7 @@ export default {
         },
       };
     },
-    updateCrawlers(state, { crawlerId }) {
+    saveDeleteCrawlers(state, { crawlerId }) {
       const { crawlers: { data, total } } = state;
       const finCrawlers = data.filter(item => {
         if (item.id !== crawlerId) {
@@ -54,6 +62,22 @@ export default {
         crawlers: {
           data: finCrawlers,
           total: total - 1,
+        },
+      };
+    },
+    updateCrawlerStatus(state, { crawlerId, resp }) {
+      const { crawlers: { data } } = state;
+      const finCrawlers = data.filter(item => {
+        if (item.id === crawlerId) {
+          return resp;
+        } else {
+          return item;
+        }
+      });
+      return {
+        ...state,
+        crawlers: {
+          data: finCrawlers,
         },
       };
     },

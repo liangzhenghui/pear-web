@@ -70,12 +70,16 @@ function getFlatMenuData(menus) {
 export const getRouterData = app => {
   const routerConfig = {
     '/': {
-      component: dynamicWrapper(app, ['user', 'global', 'login'], () => import('../layouts/BasicLayout')),
+      component: dynamicWrapper(app, ['user', 'global', 'login'], () =>
+        import('../layouts/BasicLayout')
+      ),
     },
     '/dashboard/workplace': {
-      component: dynamicWrapper(app, ['project', 'activities', 'chart', 'user'], () => import('../routes/Dashboard/Workplace')),
+      component: dynamicWrapper(app, ['project', 'activities', 'chart', 'user'], () =>
+        import('../routes/Dashboard/Workplace')
+      ),
     },
-    '/dashboard/analysis': {
+    '/dashboard/analysis/:crawlerId': {
       component: dynamicWrapper(app, ['chart'], () => import('../routes/Dashboard/Analysis')),
     },
     '/dashboard/monitor': {
@@ -164,22 +168,32 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, [], () => import('../routes/User/RegisterResult')),
     },
     '/configCrawler/ele': {
-      component: dynamicWrapper(app, ['configEleCrawler'], () => import('../routes/ConfigCrawler/Ele')),
+      component: dynamicWrapper(app, ['configEleCrawler'], () =>
+        import('../routes/ConfigCrawler/Ele')
+      ),
     },
     '/configCrawler/meituan': {
-      component: dynamicWrapper(app, ['configMeituanCrawler'], () => import('../routes/ConfigCrawler/Meituan')),
+      component: dynamicWrapper(app, ['configMeituanCrawler'], () =>
+        import('../routes/ConfigCrawler/Meituan')
+      ),
     },
     '/configCrawler/ele/info': {
       name: '登录饿了么',
-      component: dynamicWrapper(app, ['configEleCrawler'], () => import('../routes/ConfigCrawler/Ele/Step1')),
+      component: dynamicWrapper(app, ['configEleCrawler'], () =>
+        import('../routes/ConfigCrawler/Ele/Step1')
+      ),
     },
     '/configCrawler/ele/confirm': {
       name: '选择商家',
-      component: dynamicWrapper(app, ['configEleCrawler'], () => import('../routes/ConfigCrawler/Ele/Step2')),
+      component: dynamicWrapper(app, ['configEleCrawler'], () =>
+        import('../routes/ConfigCrawler/Ele/Step2')
+      ),
     },
     '/configCrawler/ele/result': {
       name: '提交爬虫任务',
-      component: dynamicWrapper(app, ['configEleCrawler'], () => import('../routes/ConfigCrawler/Ele/Step3')),
+      component: dynamicWrapper(app, ['configEleCrawler'], () =>
+        import('../routes/ConfigCrawler/Ele/Step3')
+      ),
     },
   };
   // Get name from ./menu.js or just set it in the router data.

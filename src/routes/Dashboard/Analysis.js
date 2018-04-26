@@ -12,6 +12,7 @@ import {
   Tooltip,
   Menu,
   Dropdown,
+  Spin,
 } from 'antd';
 import numeral from 'numeral';
 import {
@@ -23,40 +24,43 @@ import {
   Field,
   Bar,
   Pie,
+  TagCloud,
   TimelineChart,
 } from 'components/Charts';
 import Trend from 'components/Trend';
 import NumberInfo from 'components/NumberInfo';
 import { getTimeDistance } from '../../utils/utils';
-
+import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import styles from './Analysis.less';
+import DescriptionList from '../../components/DescriptionList';
+import spider from '../../assets/spider.jpg';
+import ReactEcharts from 'echarts-for-react';
+import { queryCrawlers } from '../../services/crawler';
 
 const { TabPane } = Tabs;
 const { RangePicker } = DatePicker;
-
-const rankingListData = [];
-for (let i = 0; i < 7; i += 1) {
-  rankingListData.push({
-    title: `工专路 ${i} 号店`,
-    total: 323234,
-  });
-}
+const { Description } = DescriptionList;
 
 @connect(({ chart, loading }) => ({
   chart,
-  loading: loading.effects['chart/fetch'],
+  loadingWordCount: loading.effects['chart/fetchWordCount'],
 }))
 export default class Analysis extends Component {
-  state = {
-    salesType: 'all',
-    currentTabKey: '',
-    rangePickerValue: getTimeDistance('year'),
-  };
-
   componentDidMount() {
-    // this.props.dispatch({
-    //   type: 'chart/fetch',
-    // });
+    const { crawlerId } = this.props.match.params;
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'chart/fetchCrawler',
+      crawlerId,
+    });
+    dispatch({
+      type: 'chart/fetchDishDistribution',
+      crawlerId,
+    });
+    dispatch({
+      type: 'chart/fetchWordCount',
+      crawlerId,
+    });
   }
 
   componentWillUnmount() {
@@ -66,429 +70,388 @@ export default class Analysis extends Component {
     });
   }
 
-  handleChangeSalesType = e => {
-    this.setState({
-      salesType: e.target.value,
-    });
-  };
-
-  handleTabChange = key => {
-    this.setState({
-      currentTabKey: key,
-    });
-  };
-
-  handleRangePickerChange = rangePickerValue => {
-    this.setState({
-      rangePickerValue,
-    });
-
-    this.props.dispatch({
-      type: 'chart/fetchSalesData',
-    });
-  };
-
-  selectDate = type => {
-    this.setState({
-      rangePickerValue: getTimeDistance(type),
-    });
-
-    this.props.dispatch({
-      type: 'chart/fetchSalesData',
-    });
-  };
-
-  isActive(type) {
-    const { rangePickerValue } = this.state;
-    const value = getTimeDistance(type);
-    if (!rangePickerValue[0] || !rangePickerValue[1]) {
-      return;
-    }
-    if (
-      rangePickerValue[0].isSame(value[0], 'day') &&
-      rangePickerValue[1].isSame(value[1], 'day')
-    ) {
-      return styles.currentDate;
-    }
-  }
-
   render() {
-    const { rangePickerValue, salesType, currentTabKey } = this.state;
-    const { chart, loading } = this.props;
-    const {
-      visitData,
-      visitData2,
-      salesData,
-      searchData,
-      offlineData,
-      offlineChartData,
-      salesTypeData,
-      salesTypeDataOnline,
-      salesTypeDataOffline,
-    } = chart;
+    const { chart, loadingWordCount } = this.props;
+    const { crawlerData, analyDish, wordCount } = chart;
 
-    const salesPieData =
-      salesType === 'all'
-        ? salesTypeData
-        : salesType === 'online' ? salesTypeDataOnline : salesTypeDataOffline;
-
-    const menu = (
-      <Menu>
-        <Menu.Item>操作一</Menu.Item>
-        <Menu.Item>操作二</Menu.Item>
-      </Menu>
-    );
-
-    const iconGroup = (
-      <span className={styles.iconGroup}>
-        <Dropdown overlay={menu} placement="bottomRight">
-          <Icon type="ellipsis" />
-        </Dropdown>
-      </span>
-    );
-
-    const salesExtra = (
-      <div className={styles.salesExtraWrap}>
-        <div className={styles.salesExtra}>
-          <a className={this.isActive('today')} onClick={() => this.selectDate('today')}>
-            今日
-          </a>
-          <a className={this.isActive('week')} onClick={() => this.selectDate('week')}>
-            本周
-          </a>
-          <a className={this.isActive('month')} onClick={() => this.selectDate('month')}>
-            本月
-          </a>
-          <a className={this.isActive('year')} onClick={() => this.selectDate('year')}>
-            全年
-          </a>
+    if (!crawlerData || !analyDish) {
+      return (
+        <div>
+          <Spin />
         </div>
-        <RangePicker
-          value={rangePickerValue}
-          onChange={this.handleRangePickerChange}
-          style={{ width: 256 }}
-        />
-      </div>
-    );
+      );
+    }
 
-    const columns = [
-      {
-        title: '排名',
-        dataIndex: 'index',
-        key: 'index',
-      },
-      {
-        title: '搜索关键词',
-        dataIndex: 'keyword',
-        key: 'keyword',
-        render: text => <a href="/">{text}</a>,
-      },
-      {
-        title: '用户数',
-        dataIndex: 'count',
-        key: 'count',
-        sorter: (a, b) => a.count - b.count,
-        className: styles.alignRight,
-      },
-      {
-        title: '周涨幅',
-        dataIndex: 'range',
-        key: 'range',
-        sorter: (a, b) => a.range - b.range,
-        render: (text, record) => (
-          <Trend flag={record.status === 1 ? 'down' : 'up'}>
-            <span style={{ marginRight: 4 }}>{text}%</span>
-          </Trend>
-        ),
-        align: 'right',
-      },
-    ];
-
-    const activeKey = currentTabKey || (offlineData[0] && offlineData[0].name);
-
-    const CustomTab = ({ data, currentTabKey: currentKey }) => (
-      <Row gutter={8} style={{ width: 138, margin: '8px 0' }}>
-        <Col span={12}>
-          <NumberInfo
-            title={data.name}
-            subTitle="转化率"
-            gap={2}
-            total={`${data.cvr * 100}%`}
-            theme={currentKey !== data.name && 'light'}
-          />
-        </Col>
-        <Col span={12} style={{ paddingTop: 36 }}>
-          <Pie
-            animate={false}
-            color={currentKey !== data.name && '#BDE4FF'}
-            inner={0.55}
-            tooltip={false}
-            margin={[0, 0, 0, 0]}
-            percent={data.cvr * 100}
-            height={64}
-          />
-        </Col>
-      </Row>
-    );
+    const { crawler, dish, rate, restaurant } = crawlerData;
+    const { price_dis, rate_count_dis, rate_dis, sales_dis, rate_date_dis } = analyDish;
 
     const topColResponsiveProps = {
       xs: 24,
-      sm: 12,
-      md: 12,
-      lg: 12,
-      xl: 6,
+      sm: 24,
+      md: 24,
+      lg: 24,
+      xl: 8,
       style: { marginBottom: 24 },
     };
 
+    const pageHeaderContent = (
+      <DescriptionList size="small" col="3">
+        <Description term="创建时间">{crawler.created}</Description>
+        <Description term="完成时间">{crawler.finished}</Description>
+        <Description term="数据量">{crawler.count}</Description>
+        <Description term="平台">{crawler.source === 1 ? '饿了么' : '美团'}</Description>
+        <Description term="商家">{restaurant.name}</Description>
+      </DescriptionList>
+    );
+
+    const rateDistribution = rate_dis.map(item => {
+      return {
+        x: item.food_name,
+        y: item.value,
+      };
+    });
+
+    let ratePercent = {};
+    rate_dis.map(item => {
+      const scrore = item.value;
+      const count = ratePercent[scrore];
+      if (count !== undefined) {
+        ratePercent[scrore] = ratePercent[scrore] + 1;
+      } else {
+        ratePercent[scrore] = 1;
+      }
+    });
+
+    const ratePercentDistribution = Object.keys(ratePercent).map(key => {
+      return {
+        name: `${key}分`,
+        value: ratePercent[key],
+      };
+    });
+
+    const dishTableColumns = [
+      {
+        title: '菜名',
+        dataIndex: 'name',
+        key: 'name',
+      },
+      {
+        title: '价格',
+        dataIndex: 'price',
+        key: 'price',
+        sorter: (a, b) => a.price - b.price,
+      },
+      {
+        title: '平均评分',
+        dataIndex: 'rating',
+        key: 'rating',
+        sorter: (a, b) => a.rating - b.rating,
+      },
+      {
+        title: '月销量',
+        dataIndex: 'moth_sales',
+        key: 'moth_sales',
+        sorter: (a, b) => a.moth_sales - b.moth_sales,
+      },
+    ];
+
+    // 销量分布
+    const salesOption = {
+      title: {
+        text: '各商品月销量',
+      },
+      toolbox: {
+        feature: {
+          dataView: { show: true, readOnly: false },
+          saveAsImage: { show: true },
+        },
+      },
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'shadow',
+        },
+      },
+      legend: {
+        data: sales_dis.map(item => {
+          return item.food_name;
+        }),
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true,
+      },
+      xAxis: {
+        type: 'category',
+        data: sales_dis.map(item => {
+          return item.food_name;
+        }),
+      },
+      yAxis: {
+        type: 'value',
+      },
+      series: [
+        {
+          name: '月销量',
+          type: 'bar',
+          data: sales_dis.map(item => {
+            return item.value;
+          }),
+        },
+      ],
+    };
+
+    // 评分统计分布
+    const rateScoreOption = {
+      title: {
+        text: '商品平均评分分布',
+      },
+      toolbox: {
+        feature: {
+          dataView: { show: true, readOnly: false },
+          saveAsImage: { show: true },
+        },
+      },
+      tooltip: {
+        trigger: 'item',
+        formatter: '{a} <br/>{b} : {c}个商品 ({d}%)',
+      },
+      legend: {
+        orient: 'horizontal',
+        bottom: 20,
+        data: ratePercentDistribution.map(item => {
+          return item.name;
+        }),
+      },
+      series: [
+        {
+          name: '评价得分',
+          type: 'pie',
+          radius: '55%',
+          center: ['50%', '50%'],
+          data: ratePercentDistribution,
+          itemStyle: {
+            emphasis: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0, 0, 0, 0.5)',
+            },
+          },
+        },
+      ],
+    };
+
+    // 评论数随价格分布
+    const rateCountWithPriceOption = {
+      title: {
+        text: '评论数随价格分布',
+      },
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'cross',
+          crossStyle: {
+            color: '#999',
+          },
+        },
+      },
+      toolbox: {
+        feature: {
+          dataView: { show: true, readOnly: false },
+          saveAsImage: { show: true },
+        },
+      },
+      xAxis: [
+        {
+          type: 'category',
+          name: '商品价格',
+          data: price_dis.map(item => {
+            return item.name;
+          }),
+          axisPointer: {
+            type: 'shadow',
+          },
+        },
+      ],
+      yAxis: [
+        {
+          type: 'value',
+          name: '评论数',
+          min: 0,
+          interval: 100,
+          axisLabel: {
+            formatter: '{value} 条',
+          },
+        },
+      ],
+      series: [
+        {
+          name: '评论数',
+          type: 'line',
+          data: price_dis.map(item => {
+            return item.value;
+          }),
+        },
+      ],
+    };
+
+    // 评论数随时间分布
+    const rateCountWithDateOption = {
+      title: {
+        text: '评论数随日期分布',
+      },
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'cross',
+          crossStyle: {
+            color: '#999',
+          },
+        },
+      },
+      toolbox: {
+        feature: {
+          dataView: { show: true, readOnly: false },
+          saveAsImage: { show: true },
+        },
+      },
+      xAxis: [
+        {
+          type: 'category',
+          name: '日期',
+          data: Object.keys(rate_date_dis),
+          axisPointer: {
+            type: 'shadow',
+          },
+        },
+      ],
+      yAxis: [
+        {
+          type: 'value',
+          name: '评论数',
+          min: 0,
+          interval: 100,
+          axisLabel: {
+            formatter: '{value} 条',
+          },
+        },
+      ],
+      series: [
+        {
+          name: '评论数',
+          type: 'line',
+          data: Object.keys(rate_date_dis).map(key => {
+            return rate_date_dis[key];
+          }),
+        },
+      ],
+    };
+
     return (
-      <Fragment>
+      <PageHeaderLayout
+        title={`爬虫号: ${crawler.id}`}
+        logo={<img src={spider} alt="spider" />}
+        content={pageHeaderContent}
+        extraContent={
+          <div style={{ textAlign: 'center' }}>
+            <img alt="" src={crawler.restaurant.image} style={{ width: 100 }} />
+          </div>
+        }
+      >
         <Row gutter={24}>
           <Col {...topColResponsiveProps}>
             <ChartCard
               bordered={false}
               title="月销量"
               action={
-                <Tooltip title="指标说明">
+                <Tooltip title="月销量">
                   <Icon type="info-circle-o" />
                 </Tooltip>
               }
-              total={() => <span dangerouslySetInnerHTML={{ __html: yuan(126560) }} />}
-              footer={<Field label="日均销售额" value={`￥${numeral(12423).format('0,0')}`} />}
-              contentHeight={46}
-            >
-              <Trend flag="up" style={{ marginRight: 16 }}>
-                周同比<span className={styles.trendText}>12%</span>
-              </Trend>
-              <Trend flag="down">
-                日环比<span className={styles.trendText}>11%</span>
-              </Trend>
-            </ChartCard>
-          </Col>
-          <Col {...topColResponsiveProps}>
-            <ChartCard
-              bordered={false}
-              title="访问量"
-              action={
-                <Tooltip title="指标说明">
-                  <Icon type="info-circle-o" />
-                </Tooltip>
-              }
-              total={numeral(8846).format('0,0')}
-              footer={<Field label="日访问量" value={numeral(1234).format('0,0')} />}
-              contentHeight={46}
-            >
-              <MiniArea color="#975FE4" data={visitData} />
-            </ChartCard>
-          </Col>
-          <Col {...topColResponsiveProps}>
-            <ChartCard
-              bordered={false}
-              title="支付笔数"
-              action={
-                <Tooltip title="指标说明">
-                  <Icon type="info-circle-o" />
-                </Tooltip>
-              }
-              total={numeral(6560).format('0,0')}
-              footer={<Field label="转化率" value="60%" />}
-              contentHeight={46}
-            >
-              <MiniBar data={visitData} />
-            </ChartCard>
-          </Col>
-          <Col {...topColResponsiveProps}>
-            <ChartCard
-              bordered={false}
-              title="运营活动效果"
-              action={
-                <Tooltip title="指标说明">
-                  <Icon type="info-circle-o" />
-                </Tooltip>
-              }
-              total="78%"
+              total={restaurant.sales}
               footer={
-                <div style={{ whiteSpace: 'nowrap', overflow: 'hidden' }}>
-                  <Trend flag="up" style={{ marginRight: 16 }}>
-                    周同比<span className={styles.trendText}>12%</span>
-                  </Trend>
-                  <Trend flag="down">
-                    日环比<span className={styles.trendText}>11%</span>
-                  </Trend>
+                <div>
+                  <Field label="平均评分" value={`${restaurant.score} 分`} />
                 </div>
               }
               contentHeight={46}
-            >
-              <MiniProgress percent={78} strokeWidth={8} target={80} color="#13C2C2" />
-            </ChartCard>
+            />
           </Col>
-        </Row>
-
-        <Card loading={loading} bordered={false} bodyStyle={{ padding: 0 }}>
-          <div className={styles.salesCard}>
-            <Tabs tabBarExtraContent={salesExtra} size="large" tabBarStyle={{ marginBottom: 24 }}>
-              <TabPane tab="销售额" key="sales">
-                <Row>
-                  <Col xl={16} lg={12} md={12} sm={24} xs={24}>
-                    <div className={styles.salesBar}>
-                      <Bar height={295} title="销售额趋势" data={salesData} />
-                    </div>
-                  </Col>
-                  <Col xl={8} lg={12} md={12} sm={24} xs={24}>
-                    <div className={styles.salesRank}>
-                      <h4 className={styles.rankingTitle}>门店销售额排名</h4>
-                      <ul className={styles.rankingList}>
-                        {rankingListData.map((item, i) => (
-                          <li key={item.title}>
-                            <span className={i < 3 ? styles.active : ''}>{i + 1}</span>
-                            <span>{item.title}</span>
-                            <span>{numeral(item.total).format('0,0')}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </Col>
-                </Row>
-              </TabPane>
-              <TabPane tab="访问量" key="views">
-                <Row>
-                  <Col xl={16} lg={12} md={12} sm={24} xs={24}>
-                    <div className={styles.salesBar}>
-                      <Bar height={292} title="访问量趋势" data={salesData} />
-                    </div>
-                  </Col>
-                  <Col xl={8} lg={12} md={12} sm={24} xs={24}>
-                    <div className={styles.salesRank}>
-                      <h4 className={styles.rankingTitle}>门店访问量排名</h4>
-                      <ul className={styles.rankingList}>
-                        {rankingListData.map((item, i) => (
-                          <li key={item.title}>
-                            <span className={i < 3 ? styles.active : ''}>{i + 1}</span>
-                            <span>{item.title}</span>
-                            <span>{numeral(item.total).format('0,0')}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </Col>
-                </Row>
-              </TabPane>
-            </Tabs>
-          </div>
-        </Card>
-
-        <Row gutter={24}>
-          <Col xl={12} lg={24} md={24} sm={24} xs={24}>
-            <Card
-              loading={loading}
+          <Col {...topColResponsiveProps}>
+            <ChartCard
               bordered={false}
-              title="线上热门搜索"
-              extra={iconGroup}
-              style={{ marginTop: 24 }}
-            >
-              <Row gutter={68}>
-                <Col sm={12} xs={24} style={{ marginBottom: 24 }}>
-                  <NumberInfo
-                    subTitle={
-                      <span>
-                        搜索用户数
-                        <Tooltip title="指标文案">
-                          <Icon style={{ marginLeft: 8 }} type="info-circle-o" />
-                        </Tooltip>
-                      </span>
-                    }
-                    gap={8}
-                    total={numeral(12321).format('0,0')}
-                    status="up"
-                    subTotal={17.1}
-                  />
-                  <MiniArea line height={45} data={visitData2} />
-                </Col>
-                <Col sm={12} xs={24} style={{ marginBottom: 24 }}>
-                  <NumberInfo
-                    subTitle="人均搜索次数"
-                    total={2.7}
-                    status="down"
-                    subTotal={26.2}
-                    gap={8}
-                  />
-                  <MiniArea line height={45} data={visitData2} />
-                </Col>
-              </Row>
-              <Table
-                rowKey={record => record.index}
-                size="small"
-                columns={columns}
-                dataSource={searchData}
-                pagination={{
-                  style: { marginBottom: 0 },
-                  pageSize: 5,
-                }}
-              />
-            </Card>
-          </Col>
-          <Col xl={12} lg={24} md={24} sm={24} xs={24}>
-            <Card
-              loading={loading}
-              className={styles.salesCard}
-              bordered={false}
-              title="销售额类别占比"
-              bodyStyle={{ padding: 24 }}
-              extra={
-                <div className={styles.salesCardExtra}>
-                  {iconGroup}
-                  <div className={styles.salesTypeRadio}>
-                    <Radio.Group value={salesType} onChange={this.handleChangeSalesType}>
-                      <Radio.Button value="all">全部渠道</Radio.Button>
-                      <Radio.Button value="online">线上</Radio.Button>
-                      <Radio.Button value="offline">门店</Radio.Button>
-                    </Radio.Group>
-                  </div>
-                </div>
+              title="近3月评价数"
+              action={
+                <Tooltip title="指标说明">
+                  <Icon type="info-circle-o" />
+                </Tooltip>
               }
-              style={{ marginTop: 24, minHeight: 509 }}
-            >
-              <h4 style={{ marginTop: 8, marginBottom: 32 }}>销售额</h4>
-              <Pie
-                hasLegend
-                subTitle="销售额"
-                total={() => (
-                  <span
-                    dangerouslySetInnerHTML={{
-                      __html: yuan(salesPieData.reduce((pre, now) => now.y + pre, 0)),
-                    }}
-                  />
-                )}
-                data={salesPieData}
-                valueFormat={val => <span dangerouslySetInnerHTML={{ __html: yuan(val) }} />}
-                height={248}
-                lineWidth={4}
-              />
-            </Card>
+              total={numeral(rate.total).format('0,0')}
+              footer={<Field label="月评价量" value={numeral(rate.total / 3).format('0,0')} />}
+              contentHeight={46}
+            />
+          </Col>
+          <Col {...topColResponsiveProps}>
+            <ChartCard
+              bordered={false}
+              title="商品种类"
+              action={
+                <Tooltip title="商家的商品种类数">
+                  <Icon type="info-circle-o" />
+                </Tooltip>
+              }
+              total={numeral(dish.total).format('0,0')}
+              footer={<Field label="最热销商品" value={sales_dis[0].food_name} />}
+              contentHeight={46}
+            />
           </Col>
         </Row>
 
-        <Card
-          loading={loading}
-          className={styles.offlineCard}
-          bordered={false}
-          bodyStyle={{ padding: '0 0 32px 0' }}
-          style={{ marginTop: 32 }}
-        >
-          <Tabs activeKey={activeKey} onChange={this.handleTabChange}>
-            {offlineData.map(shop => (
-              <TabPane tab={<CustomTab data={shop} currentTabKey={activeKey} />} key={shop.name}>
-                <div style={{ padding: '0 24px' }}>
-                  <TimelineChart
-                    height={400}
-                    data={offlineChartData}
-                    titleMap={{ y1: '客流量', y2: '支付笔数' }}
-                  />
-                </div>
-              </TabPane>
-            ))}
-          </Tabs>
-        </Card>
-      </Fragment>
+        <Row style={{ marginBottom: 20 }}>
+          <Card>
+            <Table columns={dishTableColumns} dataSource={dish.data} />
+          </Card>
+        </Row>
+
+        <Row style={{ marginBottom: 20 }}>
+          <Card>
+            <ReactEcharts option={salesOption} style={{ height: 600 }} />
+          </Card>
+        </Row>
+
+        <Row style={{ marginTop: 10 }}>
+          <Card>
+            <ReactEcharts option={rateScoreOption} style={{ height: 600 }} />
+          </Card>
+        </Row>
+
+        <Row style={{ marginTop: 10 }}>
+          <Card>
+            <ReactEcharts option={rateCountWithPriceOption} style={{ height: 600 }} />
+          </Card>
+        </Row>
+
+        <Row style={{ marginTop: 10 }}>
+          <Card>
+            <ReactEcharts option={rateCountWithDateOption} style={{ height: 600 }} />
+          </Card>
+        </Row>
+        <Row style={{ marginTop: 10 }}>
+          <Card loading={loadingWordCount}>
+            <TagCloud
+              data={Object.keys(wordCount).map(key => {
+                return {
+                  name: key,
+                  value: wordCount[key] * 10000 + 20,
+                };
+              })}
+              height={200}
+            />
+          </Card>
+        </Row>
+      </PageHeaderLayout>
     );
   }
 }
