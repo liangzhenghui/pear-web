@@ -86,7 +86,10 @@ class Step2 extends React.PureComponent {
   }
 
   componentWillMount() {
-    this.fetchCities();
+    const { cities } = this.props
+    if (!cities) {
+      this.fetchCities();
+    }
   }
 
   handleSearch = value => {

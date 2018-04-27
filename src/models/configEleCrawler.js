@@ -10,7 +10,7 @@ export default {
         sms_token: null,
         pic_token: null,
         restaurantArea: [],
-        restaurantListOfArea: []
+        restaurantListOfArea: []        
     },
 
     effects: {
@@ -41,7 +41,7 @@ export default {
             if (resp.success) {
                 notification.success({
                     message: '登录饿了么成功',
-                })
+                })                
                 yield put(routerRedux.push('/configCrawler/ele/confirm'))
             } else {
                 notification.error({

@@ -166,8 +166,11 @@ export const cookie = {
     const cookies = _cookie.split(';');
     for (const c of cookies) {
       const item = c.split('=');
-      const key = item[0];
+      let key = item[0];
       const value = item[1];
+      if (key.indexOf(" ") > -1) {
+        key = key.substring(1)
+      }      
       if (cookieKey === key) {
         return value;
       }

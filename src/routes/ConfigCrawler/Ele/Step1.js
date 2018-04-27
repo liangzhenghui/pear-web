@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import { Form, Input, Button, Select, Divider, Row, Col, notification, Alert } from 'antd';
 import { routerRedux } from 'dva/router';
 import styles from './style.less';
+import { cookie } from '../../../utils/utils'
 
 const { Option } = Select;
 
@@ -20,9 +21,10 @@ class Step1 extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      mobileNotMatch: null,
+      mobileNotMatch: null
     };
   }
+
 
   handleMobileInput = event => {
     const mobile = event.target.value;
@@ -37,6 +39,11 @@ class Step1 extends React.PureComponent {
     }
   };
 
+  jumpToNextStep = () => {
+    const { dispatch } = this.props
+    dispatch(routerRedux.push('/configCrawler/ele/confirm'))
+  }
+
   render() {
     const {
       form,
@@ -49,6 +56,7 @@ class Step1 extends React.PureComponent {
     const { getFieldDecorator, validateFields } = form;
     const { sms_token, pic_base64 } = this.props;
     const { mobileNotMatch } = this.state;
+    const ele_login_account = cookie.get('ele_login_account');
 
     const onValidateForm = () => {
       validateFields((err, values) => {
@@ -112,7 +120,12 @@ class Step1 extends React.PureComponent {
           <Form.Item {...formItemLayout} label="手机号">
             {getFieldDecorator('mobile', {
               rules: [{ required: true, message: '请输入手机号' }],
-            })(<Input placeholder="手机号" onChange={this.handleMobileInput} />)}
+            })(
+              <Input
+                placeholder={ele_login_account || "手机号"}
+                onChange={this.handleMobileInput}
+              />
+            )}
             {mobileNotMatch !== null ? (
               <Alert
                 message={mobileNotMatch ? 'error' : 'success'}
@@ -120,8 +133,8 @@ class Step1 extends React.PureComponent {
                 showIcon
               />
             ) : (
-              ''
-            )}
+                ''
+              )}
           </Form.Item>
           {needPicCode && (
             <Form.Item {...formItemLayout} label="图片验证码">
@@ -174,14 +187,26 @@ class Step1 extends React.PureComponent {
             }}
             label=""
           >
-            <Button
-              type="primary"
-              onClick={onValidateForm}
-              loading={loginLoading}
-              htmlType="submit"
-            >
-              登录并进入下一步
+            <Row gutter={24}>
+              <Col span={12}>
+                <Button
+                  type="primary"
+                  onClick={onValidateForm}
+                  loading={loginLoading}
+                  htmlType="submit"
+                >
+                  登录并进入下一步
             </Button>
+              </Col>
+              {ele_login_account &&
+                <Col span={12}>
+                  <Button
+                    type="dashed"
+                    onClick={this.jumpToNextStep}>
+                    上次已登录跳到下一步
+            </Button>
+                </Col>}
+            </Row>
           </Form.Item>
         </Form>
         <Divider style={{ margin: '40px 0 24px' }} />
