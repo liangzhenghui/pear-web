@@ -22,9 +22,6 @@ export default class Workplace extends PureComponent {
     const { dispatch } = this.props;
     dispatch({
       type: 'activities/fetchList'
-    });
-    dispatch({
-      type: 'activities/fetchCompareAllData'
     })
   }
 
@@ -298,13 +295,21 @@ export default class Workplace extends PureComponent {
                 新建美团外卖爬虫
               </Button>
             </Card>
-
-            <Card bodyStyle={{ textAlign: "center" }} loading={activitiesLoading}>
-              <WaterWave
-                loading={activitiesLoading}
-                title="爬虫任务完成"
-                height={200}
-                percent={(crawlers.done_total / crawlers.crawler_total * 100).toFixed(1)}
+            <Card bodyStyle={{ maxHeight: 480, overflow: 'auto' }} title="操作记录">
+              <List
+                dataSource={actions.data}
+                renderItem={item => (
+                  <List.Item>
+                    <List.Item.Meta
+                      avatar={
+                        <Avatar
+                          style={{ backgroundColor: '#87d068' }}
+                          icon="user" />}
+                      title={`${item.action_name}`}
+                      description={`${item.created} ${item.action_args || ''}`}
+                    />
+                  </List.Item>
+                )}
               />
             </Card>
           </Col>
@@ -321,34 +326,15 @@ export default class Workplace extends PureComponent {
               <Table
                 columns={crawlerColumns}
                 dataSource={crawlers_data}
-                pagination={{ pageSize: 5 }} />
+                pagination={{ pageSize: 6 }} />
             </Card>
           </Col>
         </Row>
-        <Row style={{ marginTop: 20 }}>
+        {/* <Row>
           <Card bodyStyle={{ maxHeight: 500 }} title="商家整体数据">
-            <ReactEcharts option={restaurantOption} />
+            {Object.keys(compareData).length > 0 ? <ReactEcharts option={restaurantOption} /> : <p style={{textAlign:'center'}}>暂无数据</p>}
           </Card>
-        </Row>
-        <Row style={{ marginTop: 20 }}>
-          <Card bodyStyle={{ maxHeight: 500, overflow: 'auto' }} title="操作记录">
-            <List
-              dataSource={actions.data}
-              renderItem={item => (
-                <List.Item>
-                  <List.Item.Meta
-                    avatar={
-                      <Avatar
-                        style={{ backgroundColor: '#87d068' }}
-                        icon="user" />}
-                    title={`${item.action_name}`}
-                    description={`${item.created} ${item.action_args || ''}`}
-                  />
-                </List.Item>
-              )}
-            />
-          </Card>
-        </Row>
+        </Row> */}
       </PageHeaderLayout>
     );
   }

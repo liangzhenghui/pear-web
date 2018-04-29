@@ -135,8 +135,8 @@ const proxy = {
       path: '/base/category/list',
     });
   },
-};
-const api = 'http://localhost:7777/';
+}; 
+const api = 'http://192.168.0.107:7777/';
 const product = {
   'GET /*': api,
   'POST /*': api,

@@ -10,7 +10,7 @@ export default {
         sms_token: null,
         pic_token: null,
         restaurantArea: [],
-        restaurantListOfArea: []        
+        restaurantListOfArea: []
     },
 
     effects: {
@@ -41,7 +41,7 @@ export default {
             if (resp.success) {
                 notification.success({
                     message: '登录饿了么成功',
-                })                
+                })
                 yield put(routerRedux.push('/configCrawler/ele/confirm'))
             } else {
                 notification.error({
@@ -64,6 +64,9 @@ export default {
         },
         *getRestaurantArea({ payload: { key, lat, lng } }, { call, put }) {
             const resp = yield call(searchRestaurantArea, key, lat, lng)
+            yield put({
+                type: 'clearRestaurants'
+            })
             yield put({
                 type: 'saveRestaurantArea',
                 payload: resp
@@ -143,6 +146,13 @@ export default {
             return {
                 ...state,
                 cities: action.payload
+            }
+        },
+        clearRestaurants(state, action) {
+            return {
+                ...state,
+                restaurantListOfArea: [],
+                restaurantArea: []
             }
         }
     }

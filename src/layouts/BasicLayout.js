@@ -14,7 +14,7 @@ import NotFound from '../routes/Exception/404';
 import { getRoutes } from '../utils/utils';
 import Authorized from '../utils/Authorized';
 import { getMenuData } from '../common/menu';
-import logo from '../assets/spider.jpg';
+import logo from '../assets/logo2.png';
 
 const { Content, Header, Footer } = Layout;
 const { AuthorizedRoute, check } = Authorized;
@@ -115,9 +115,9 @@ class BasicLayout extends React.PureComponent {
   getPageTitle() {
     const { routerData, location } = this.props;
     const { pathname } = location;
-    let title = 'Spider蜘蛛';
+    let title = 'Spider';
     if (routerData[pathname] && routerData[pathname].name) {
-      title = `${routerData[pathname].name} - Spider蜘蛛`;
+      title = `${routerData[pathname].name} - Spider`;
     }
     return title;
   }
@@ -243,7 +243,7 @@ class BasicLayout extends React.PureComponent {
               ]}
               copyright={
                 <Fragment>
-                  Copyright <Icon type="copyright" /> 2018 外卖商家数据助手
+                  Copyright <Icon type="copyright" /> 2018 外卖商家数据分析服务平台
                 </Fragment>
               }
             />

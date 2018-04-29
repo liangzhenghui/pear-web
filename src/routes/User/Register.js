@@ -162,7 +162,6 @@ export default class Register extends Component {
     const { count, prefix } = this.state;
     return (
       <div className={styles.main}>
-        <h3>注册</h3>
         <Form onSubmit={this.handleSubmit}>
           <FormItem>
             {getFieldDecorator('name', {

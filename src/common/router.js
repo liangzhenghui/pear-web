@@ -81,15 +81,7 @@ export const getRouterData = app => {
     },
     '/dashboard/monitor': {
       component: dynamicWrapper(app, ['monitor'], () => import('../routes/Dashboard/Monitor')),
-    },
-    '/profile/basic': {
-      component: dynamicWrapper(app, ['profile'], () => import('../routes/Profile/BasicProfile')),
-    },
-    '/profile/advanced': {
-      component: dynamicWrapper(app, ['profile'], () =>
-        import('../routes/Profile/AdvancedProfile')
-      ),
-    },
+    },    
     '/exception/403': {
       component: dynamicWrapper(app, [], () => import('../routes/Exception/403')),
     },
@@ -149,7 +141,7 @@ export const getRouterData = app => {
     },
     '/analy/pro/:crawlerId_1/:crawlerId_2': {      
       component: dynamicWrapper(app, ['chart'], () => import('../routes/Analy/Pro')),
-    }
+    }    
   };
   // Get name from ./menu.js or just set it in the router data.
   const menuData = getFlatMenuData(getMenuData());

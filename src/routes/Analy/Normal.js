@@ -38,6 +38,7 @@ import ReactEcharts from 'echarts-for-react';
 import { queryCrawlers } from '../../services/crawler';
 import { wordCount } from '../../services/analyse';
 import { WORD_MAP } from '../../utils/const'
+import { routerRedux } from 'dva/router'
 
 const { TabPane } = Tabs;
 const { RangePicker } = DatePicker;
@@ -63,6 +64,7 @@ export default class Analysis extends Component {
       type: 'chart/fetchWordCloud',
       crawlerId,
     });
+
   }
 
   componentWillUnmount() {
@@ -84,26 +86,30 @@ export default class Analysis extends Component {
       );
     }
 
-    const { crawler, dish, rate, restaurant } = crawlerData;
+    const { crawler, dish, rate } = crawlerData;
     const { price_dis, rate_count_dis, rate_dis, sales_dis, rate_date_dis } = analyDish;
 
     const topColResponsiveProps = {
       xs: 24,
       sm: 24,
       md: 24,
-      lg: 24,
-      xl: 8,
+      lg: 4,
+      xl: 4,
       style: { marginBottom: 24 },
     };
 
+
     const pageHeaderContent = (
-      <DescriptionList size="small" col="3">
-        <Description term="创建时间">{crawler.created}</Description>
-        <Description term="完成时间">{crawler.finished}</Description>
-        <Description term="数据量">{crawler.count}</Description>
-        <Description term="平台">{crawler.source === 1 ? '饿了么' : '美团'}</Description>
-        <Description term="商家">{restaurant.name}</Description>
-      </DescriptionList>
+      <div style={{ width: "52%" }}>
+        <div style={{ float: "left" }}><img alt="" src={crawler.restaurant.image} style={{ width: 100 }} /></div>
+        <div style={{ marginLeft: 24, marginTop: 8, float: "right" }}>
+          <span><h1 style={{ color: "#1890ff" }}>{crawler.restaurant.name}</h1></span>
+          <span>平台：{crawler.source === 1 ? '饿了么' : '美团'}</span>
+          <span style={{ marginLeft: 32 }}>爬取数据量：{crawler.count}</span>
+          <span style={{ marginLeft: 32 }}>创建时间：{crawler.created}</span>
+          <span style={{ marginLeft: 32 }}>完成时间：{crawler.finished}</span>
+        </div>
+      </div>
     );
 
     const rateDistribution = rate_dis.map(item => {
@@ -201,14 +207,17 @@ export default class Analysis extends Component {
           data: sales_dis.map(item => {
             return item.value;
           }),
+          itemStyle: {
+            color: '#69c0ff'
+          }
         },
       ],
     };
 
-    // 评分统计统计
+    // 评分统计
     const rateScoreOption = {
       title: {
-        text: '商家商品平均评分统计统计',
+        text: '商品平均评分统计',
       },
       toolbox: {
         feature: {
@@ -235,6 +244,7 @@ export default class Analysis extends Component {
           center: ['50%', '50%'],
           data: ratePercentDistribution,
           itemStyle: {
+            
             emphasis: {
               shadowBlur: 10,
               shadowOffsetX: 0,
@@ -290,6 +300,7 @@ export default class Analysis extends Component {
       ],
       series: [
         {
+          color: '#a0d911',
           name: '评论数',
           type: 'line',
           data: price_dis.map(item => {
@@ -342,6 +353,7 @@ export default class Analysis extends Component {
       ],
       series: [
         {
+          color: "#13c2c2",
           name: '评论数',
           type: 'line',
           data: Object.keys(rate_date_dis).map(key => {
@@ -353,18 +365,12 @@ export default class Analysis extends Component {
 
     return (
       <PageHeaderLayout
-        title={`爬虫号: ${crawler.id}`}
-        logo={<img src={spider} alt="spider" />}
         content={pageHeaderContent}
-        extraContent={
-          <div style={{ textAlign: 'center' }}>
-            <img alt="" src={crawler.restaurant.image} style={{ width: 100 }} />
-          </div>
-        }
       >
         <Row gutter={24}>
           <Col {...topColResponsiveProps}>
             <ChartCard
+              style={{ height: 170 }}
               bordered={false}
               title="月销量"
               action={
@@ -372,21 +378,20 @@ export default class Analysis extends Component {
                   <Icon type="info-circle-o" />
                 </Tooltip>
               }
-              total={restaurant.sales}
+              total={crawler.restaurant.sales}
               footer={
                 <div>
-                  <Field label="平均评分" value={`${restaurant.score} 分`} />
+                  <Field label="平均评分" value={`${crawler.restaurant.score} 分`} />
                 </div>
               }
               contentHeight={46}
             />
-          </Col>
-          <Col {...topColResponsiveProps}>
             <ChartCard
+              style={{ marginTop: 24, height: 168 }}
               bordered={false}
               title="近3月评价数"
               action={
-                <Tooltip title="指标说明">
+                <Tooltip title="最近三个月收到的评价数">
                   <Icon type="info-circle-o" />
                 </Tooltip>
               }
@@ -394,9 +399,8 @@ export default class Analysis extends Component {
               footer={<Field label="月评价量" value={numeral(rate.total / 3).format('0,0')} />}
               contentHeight={46}
             />
-          </Col>
-          <Col {...topColResponsiveProps}>
             <ChartCard
+              style={{ marginTop: 24, height: 168 }}
               bordered={false}
               title="商品种类"
               action={
@@ -409,39 +413,38 @@ export default class Analysis extends Component {
               contentHeight={46}
             />
           </Col>
+          <Col span={20}>
+            <Card loading={loadingWordCount} title="评价词云" bodyStyle={{ textAlign: 'center' }}>
+              {wordCloudImages ? <img style={{ maxWidth: '600px' }} alt="" src={wordCloudImages.total_image} /> : ""}
+            </Card>
+          </Col>
         </Row>
 
-        <Row style={{ marginTop: 10 }}>
-          <Card loading={loadingWordCount} title="评价词云" bodyStyle={{ textAlign: 'center' }}>
-            {wordCloudImages ? <img style={{ maxWidth: '600px' }} alt="" src={wordCloudImages.total_image} /> : ""}
-          </Card>
-        </Row>
-
-        <Row style={{ marginTop: 10 }}>
-          <Card>
+        <Row>
+          <Card title="商品详细信息">
             <Table columns={dishTableColumns} dataSource={dish.data} />
           </Card>
         </Row>
 
-        <Row style={{ marginTop: 10 }}>
+        <Row style={{ marginTop: 24 }}>
           <Card>
             <ReactEcharts option={salesOption} style={{ height: 600 }} />
           </Card>
         </Row>
 
-        <Row style={{ marginTop: 10 }}>
+        <Row style={{ marginTop: 24 }}>
           <Card>
             <ReactEcharts option={rateScoreOption} style={{ height: 600 }} />
           </Card>
         </Row>
 
-        <Row style={{ marginTop: 10 }}>
+        <Row style={{ marginTop: 24 }}>
           <Card>
             <ReactEcharts option={rateCountWithPriceOption} style={{ height: 600 }} />
           </Card>
         </Row>
 
-        <Row style={{ marginTop: 10 }}>
+        <Row style={{ marginTop: 24 }}>
           <Card>
             <ReactEcharts option={rateCountWithDateOption} style={{ height: 600 }} />
           </Card>

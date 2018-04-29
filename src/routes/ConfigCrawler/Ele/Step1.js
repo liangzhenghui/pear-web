@@ -138,30 +138,29 @@ class Step1 extends React.PureComponent {
           </Form.Item>
           {needPicCode && (
             <Form.Item {...formItemLayout} label="图片验证码">
-              <Row gutter={21}>
-                <Col span={12}>
+              <Row gutter={16}>
+                <Col span={16}>
                   {getFieldDecorator('pic_code', {
                     rules: [{ required: true, message: '请输入图片验证码' }],
                   })(<Input placeholder="图片验证码" />)}
-                </Col>
-                <Col span={5}>
-                  <img src={pic_base64} />
-                </Col>
+                </Col>               
                 <Col span={4}>
-                  <Button
-                    style={{ marginLeft: 6 }}
+                  <Button                   
                     loading={getElePicCodeLoading}
                     onClick={refreshPicCode}
                   >
                     获取/刷新
                   </Button>
                 </Col>
+                <Col span={4}>
+                  <img style={{marginLeft:8}} src={pic_base64} />
+                </Col>
               </Row>
             </Form.Item>
           )}
           <Form.Item {...formItemLayout} label="验证码">
-            <Row gutter={21}>
-              <Col span={17}>
+            <Row gutter={16}>
+              <Col span={19}>
                 {getFieldDecorator('sms_code', {
                   rules: [{ required: true, message: '请输入短信验证码' }],
                 })(<Input placeholder="短信验证码" />)}
@@ -214,12 +213,9 @@ class Step1 extends React.PureComponent {
           <h3>说明</h3>
           <h4>登录饿了么平台</h4>
           <p>
-            外卖蜘蛛平台不会存储任何你的饿了么用户信息。这里要求登录，只是为了登录饿了么拿到获取数据的权限。
+            Spider平台不会存储任何你的饿了么用户信息。这里要求登录，只是为了登录饿了么拿到获取数据的权限。
           </p>
-          <h4>转账到银行卡</h4>
-          <p>
-            如果需要，这里可以放一些关于产品的常见问题说明。如果需要，这里可以放一些关于产品的常见问题说明。如果需要，这里可以放一些关于产品的常见问题说明。
-          </p>
+       
         </div>
       </Fragment>
     );
