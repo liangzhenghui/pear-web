@@ -20,9 +20,9 @@ export default {
         payload: response,
       });
       // Login successfully
-      if (response.status === 'ok') {
-        reloadAuthorized();
+      if (response.status === 'ok') {        
         cookie.set('u_id', response.user.id);
+        reloadAuthorized();
         notification.success({
           message: '登录成功',
         });

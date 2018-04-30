@@ -11,9 +11,9 @@ export async function doDeleteCrawler(crawlerId) {
 }
 
 export async function queryCrawlerStatus(crawlerId) {
-  return request(`crawler_tasks/status/${crawlerId}`);
+  return request(`/crawler_tasks/status/${crawlerId}`);
 }
 
 export async function queryCrawler(crawlerId) {
-  return request(`crawler_tasks/${crawlerId}`);
+  return request(`/crawler_tasks/${crawlerId}`);
 }

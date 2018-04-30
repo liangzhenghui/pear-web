@@ -44,9 +44,14 @@ export default class Workplace extends PureComponent {
   };
 
   render() {
-    const { activitiesLoading, user, dispatch } = this.props;
+    const { activitiesLoading, user, activities, dispatch } = this.props;
+    if (!user || !activities) {
+      return (
+        <div style={{ width: '100%', textAlign: 'center' }}><Spin style={{ marginTop: 20 }} /></div>
+      )
+    }
     const { visitor_count, used_days } = user;
-    const { crawlers, actions, compareData } = this.props.activities;
+    const { crawlers, actions, compareData } = activities;
     const crawlers_data = crawlers.data
       ? crawlers.data.map((value, index) => {
         return {

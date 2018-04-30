@@ -10,9 +10,7 @@ export default {
     crawlerData: null,
     analyDish: null,
     wordCloudImages: null,
-    compareData: {
-      
-    }
+    compareData: {}
   },
 
   effects: {
@@ -64,13 +62,13 @@ export default {
     saveCrawler(state, { crawlerData }) {
       return {
         ...state,
-        crawlerData,
+        crawlerData
       };
     },
     saveAnalyDish(state, { analyDish }) {
       return {
         ...state,
-        analyDish,
+        analyDish
       };
     },
     saveWordCloud(state, { wordCloudImages }) {

@@ -13,6 +13,7 @@ import {
   Menu,
   Dropdown,
   Spin,
+  notification
 } from 'antd';
 import numeral from 'numeral';
 import {
@@ -39,6 +40,7 @@ import { queryCrawlers } from '../../services/crawler';
 import { wordCount } from '../../services/analyse';
 import { WORD_MAP } from '../../utils/const'
 import { routerRedux } from 'dva/router'
+import { Redirect } from 'react-router';
 
 const { TabPane } = Tabs;
 const { RangePicker } = DatePicker;
@@ -97,6 +99,13 @@ export default class Analysis extends Component {
       xl: 4,
       style: { marginBottom: 24 },
     };
+
+    if (!crawler.restaurant) {
+      notification.error({
+        message: '商家获取失败'
+      })
+      return <Redirect to="/dashboard" />
+    }
 
 
     const pageHeaderContent = (
@@ -244,7 +253,7 @@ export default class Analysis extends Component {
           center: ['50%', '50%'],
           data: ratePercentDistribution,
           itemStyle: {
-            
+
             emphasis: {
               shadowBlur: 10,
               shadowOffsetX: 0,
