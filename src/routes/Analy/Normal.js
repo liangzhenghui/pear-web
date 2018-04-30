@@ -41,6 +41,7 @@ import { wordCount } from '../../services/analyse';
 import { WORD_MAP } from '../../utils/const'
 import { routerRedux } from 'dva/router'
 import { Redirect } from 'react-router';
+import emptyLogo from '../../assets/empty.png'
 
 const { TabPane } = Tabs;
 const { RangePicker } = DatePicker;
@@ -424,7 +425,7 @@ export default class Analysis extends Component {
           </Col>
           <Col span={20}>
             <Card loading={loadingWordCount} title="评价词云" bodyStyle={{ textAlign: 'center' }}>
-              {wordCloudImages ? <img style={{ maxWidth: '600px' }} alt="" src={wordCloudImages.total_image} /> : ""}
+              <img style={{ maxWidth: '600px' }} alt="" src={wordCloudImages ? wordCloudImages.total_image ? wordCloudImages.total_image : emptyLogo : emptyLogo} />
             </Card>
           </Col>
         </Row>

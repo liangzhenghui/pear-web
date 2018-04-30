@@ -1,74 +1,37 @@
 import { isUrl } from '../utils/utils';
+import e_logo from '../assets/e_Logo.png';
+import m_logo from '../assets/m_Logo.png';
 
 const menuData = [
   {
-    name: 'dashboard',
+    name: '首页',
+    icon: 'home',
+    path: 'dashboard/workplace'
+  },
+  {
+    name: '监控台',
     icon: 'dashboard',
-    path: 'dashboard',
-    children: [
-      {
-        name: '工作台',
-        path: 'workplace',
-      },
-      {
-        name: '监控',
-        path: 'monitor',
-      }      
-    ],
+    path: 'dashboard/monitor'
   },
   {
-    name: '爬虫配置',
-    icon: 'form',
-    path: 'configCrawler',
-    children: [
-      {
-        name: '饿了么',
-        path: 'ele',
-      },
-      {
-        name: '美团外卖',
-        path: 'meituan',
-      },
-    ],
+    name: '新建饿了么爬虫',
+    icon: e_logo,
+    path: 'configCrawler/ele'
   },
   {
-    name: '分析',
-    icon: 'check-circle-o',
-    path: 'analy',
-    children: [
-      {
-        name: '单独分析',
-        path: 'normal'
-      },
-      {
-        name: '对比分析',
-        path: 'pro'
-      }
-    ],
+    name: '新建美团外卖爬虫',
+    icon: m_logo,
+    path: 'configCrawler/meituan'
   },
   {
-    name: '异常页',
-    icon: 'warning',
-    path: 'exception',
-    children: [
-      {
-        name: '403',
-        path: '403',
-      },
-      {
-        name: '404',
-        path: '404',
-      },
-      {
-        name: '500',
-        path: '500',
-      },
-      {
-        name: '触发异常',
-        path: 'trigger',
-        hideInMenu: true,
-      },
-    ],
+    name: '单独分析',
+    icon: 'line-chart',
+    path: 'analy/normal'
+  },
+  {
+    name: '对比分析',
+    icon: 'bar-chart',
+    path: 'analy/pro'
   },
   {
     name: '账户',

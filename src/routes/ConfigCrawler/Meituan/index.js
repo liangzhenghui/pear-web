@@ -22,11 +22,11 @@ export default class ConfigCrawlerEle extends Component {
     const { pathname } = location;
     const pathList = pathname.split('/');
     switch (pathList[pathList.length - 1]) {
-      case 'info':
+      case 'step1':
         return 0;
-      case 'confirm':
+      case 'step2':
         return 1;
-      case 'result':
+      case 'step3':
         return 2;
       default:
         return 0;
@@ -43,9 +43,9 @@ export default class ConfigCrawlerEle extends Component {
         <Card bordered={false}>
           <Fragment>
             <Steps current={this.getCurrentStep()} className={styles.steps}>
-              <Step title="登录平台" />
-              <Step title="确认转账信息" />
-              <Step title="完成" />
+              <Step title="登录美团" />
+              <Step title="确认爬取配置" />
+              <Step title="提交" />
             </Steps>
             <Switch>
               {getRoutes(match.path, routerData).map(item => (
@@ -56,7 +56,7 @@ export default class ConfigCrawlerEle extends Component {
                   exact={item.exact}
                 />
               ))}
-              <Redirect exact from="/form/step-form" to="/form/step-form/info" />
+              <Redirect exact from="/configCrawler/meituan" to="/configCrawler/meituan/step1" />
               <Route render={NotFound} />
             </Switch>
           </Fragment>

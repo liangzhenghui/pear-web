@@ -25,14 +25,6 @@ export default class Workplace extends PureComponent {
     })
   }
 
-  componentDidMount() {
-    const { dispatch } = this.props
-    dispatch({
-      type: 'global/changeLayoutCollapsed',
-      payload: true
-    })
-  }
-
   handleCreateEleCrawler = () => {
     const { dispatch } = this.props;
     dispatch(routerRedux.push('/configCrawler/ele'));
@@ -332,6 +324,14 @@ export default class Workplace extends PureComponent {
                 columns={crawlerColumns}
                 dataSource={crawlers_data}
                 pagination={{ pageSize: 6 }} />
+              <Divider style={{ margin: '40px 0 24px' }} />
+              <div>
+                <h3>说明</h3>
+                <p>
+                  点击 [店铺名] 或 [查看] 可进入店铺详情分析。
+                  点击 [更多操作]  进入 [监控台] 使用更多功能。
+              </p>
+              </div>
             </Card>
           </Col>
         </Row>
