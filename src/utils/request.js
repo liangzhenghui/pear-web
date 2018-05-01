@@ -61,8 +61,8 @@ export default function request(url, options) {
       };
     }
   }
-  url = API_HOST + url;
-  return fetch(url, newOptions)
+
+  return fetch('/api' + url, newOptions)
     .then(checkStatus)
     .then(response => {
       if (newOptions.method === 'DELETE' || response.status === 204) {

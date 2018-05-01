@@ -325,7 +325,7 @@ export default class Workplace extends PureComponent {
               extra={
                 <div>
                   <Button
-                    loading={crawlerListoading}
+                    loading={activitiesLoading}
                     type="primary"
                     shape="circle"
                     icon="reload"
