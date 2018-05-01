@@ -53,8 +53,16 @@ const { Description } = DescriptionList;
 }))
 export default class Analysis extends Component {
   componentDidMount() {
-    const { crawlerId } = this.props.match.params;
     const { dispatch } = this.props;
+    const { crawlerId } = this.props.match.params;
+    console.log(crawlerId)
+    if (!crawlerId) {
+      notification.info({
+        message: '请先选择要单独分析的商家'
+      })
+      dispatch(routerRedux.push('/dashboard/monitor'))
+      return
+    }
     dispatch({
       type: 'chart/fetchCrawler',
       crawlerId,
@@ -110,16 +118,20 @@ export default class Analysis extends Component {
 
 
     const pageHeaderContent = (
-      <div style={{ width: "52%" }}>
-        <div style={{ float: "left" }}><img alt="" src={crawler.restaurant.image} style={{ width: 100 }} /></div>
-        <div style={{ marginLeft: 24, marginTop: 8, float: "right" }}>
-          <span><h1 style={{ color: "#1890ff" }}>{crawler.restaurant.name}</h1></span>
-          <span>平台：{crawler.source === 1 ? '饿了么' : '美团'}</span>
-          <span style={{ marginLeft: 32 }}>爬取数据量：{crawler.count}</span>
-          <span style={{ marginLeft: 32 }}>创建时间：{crawler.created}</span>
-          <span style={{ marginLeft: 32 }}>完成时间：{crawler.finished}</span>
-        </div>
-      </div>
+      <Row gutter={16}>
+        <Col xs={24} sm={24} md={3} lg={3} xl={3}>
+          <div style={{ float: "left" }}><img alt="" src={crawler.restaurant.image} style={{ width: 100 }} /></div>
+        </Col>
+        <Col xs={24} sm={24} md={21} lg={21} xl={21}>
+          <div style={{ marginTop: 12 }}>
+            <span><h1 style={{ color: "#1890ff" }}>{crawler.restaurant.name}</h1></span>
+            <span>平台：{crawler.source === 1 ? '饿了么' : '美团'}</span>
+            <span style={{ marginLeft: 32 }}>爬取数据量：{crawler.count}</span>
+            <span style={{ marginLeft: 32 }}>创建时间：{crawler.created}</span>
+            <span style={{ marginLeft: 32 }}>完成时间：{crawler.finished}</span>
+          </div>
+        </Col >
+      </Row >
     );
 
     const rateDistribution = rate_dis.map(item => {

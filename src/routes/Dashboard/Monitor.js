@@ -13,17 +13,15 @@ import {
   Button,
   Popconfirm,
   Tag,
-  Divider
+  Divider,
+  notification
 } from 'antd';
 import numeral from 'numeral';
 import { Pie, WaterWave, Gauge, TagCloud } from 'components/Charts';
-import NumberInfo from 'components/NumberInfo';
-import CountDown from 'components/CountDown';
-import ActiveChart from 'components/ActiveChart';
-import Authorized from '../../utils/Authorized';
 import styles from './Monitor.less';
 import { CRAWLER_TYPES } from '../../utils/const';
 import { Link, routerRedux } from 'dva/router';
+import vs from '../../assets/vs.png'
 
 @connect(({ monitor, loading }) => ({
   monitor,
@@ -82,9 +80,10 @@ export default class Monitor extends PureComponent {
     });
   };
 
-  onSelectCrawler = (_, selectedCrawlers) => {
-    this.setState({ selectedCrawlers })
+  onSelectCrawler = (selectedRowKeys, selectedRows) => {
+    this.setState({ selectedCrawlers: selectedRows })
   }
+
   goProAnaly = () => {
     const { selectedCrawlers } = this.state
     const { dispatch } = this.props
@@ -179,12 +178,40 @@ export default class Monitor extends PureComponent {
     const crawlerSelection = {
       selectedCrawlers,
       onChange: this.onSelectCrawler,
-      fixed: true
+      hideDefaultSelections: true
     }
 
     return (
       <Fragment>
-        <Row style={{ marginBottom: 20 }}>
+        <Card>
+          {selectedCrawlers && selectedCrawlers.length == 2 ?
+            <div>
+              <Row gutter={24}>
+                <Col xs={24} sm={24} md={24} lg={8} xl={8} style={{ textAlign: 'center' }}>
+                  <img
+                    style={{ width: 200, height: 200 }}
+                    src={selectedCrawlers[0].restaurant.image} />
+                  <h2 style={{ marginTop: 16 }}>{selectedCrawlers[0].restaurant.name}</h2>
+                </Col>
+                <Col xs={24} sm={24} md={24} lg={8} xl={8} style={{ textAlign: 'center' }}>
+                  <img src={vs} style={{ width: 150, height: 150, margin: "24px 0" }} />
+                  <p style={{ marginTop: 16 }}>平台：{selectedCrawlers[0].restaurant.source === 1 ? '饿了么' : '美团'} / {selectedCrawlers[1].restaurant.source === 1 ? '饿了么' : '美团'}</p>
+                </Col>
+                <Col xs={24} sm={24} md={24} lg={8} xl={8} style={{ textAlign: 'center' }}>
+                  <img
+                    style={{ width: 200, height: 200 }}
+                    src={selectedCrawlers[1].restaurant.image} />
+                  <h2 style={{ marginTop: 16 }}>{selectedCrawlers[1].restaurant.name}</h2>
+                </Col>
+              </Row>
+              <div style={{ textAlign: 'center' }}>
+                <Button type="primary" style={{ width: 300 }} onClick={this.goProAnaly}>对比分析</Button>
+              </div>
+            </div> :
+            <h3>选择单个商家进行单独分析，选择两个商家进行对比分析</h3>
+          }
+        </Card>
+        <Row style={{ marginTop: 20 }}>
           <Card
             title="爬虫列表"
             bordered={false}
@@ -199,16 +226,6 @@ export default class Monitor extends PureComponent {
                   icon="reload"
                   onClick={() => this.fetchCrawlers(crawlerPage, crawlerPerPage)}
                 />
-                <Button type="primary"
-                  style={{ marginLeft: 10, marginRight: 10 }}
-                  disabled={selectedCrawlers.length <= 1}
-                  onClick={this.goProAnaly}
-                >
-                  对比分析<Icon type="right" />
-                </Button>
-                {selectedCrawlers.map(item => {
-                  return <Tag color="blue">{item.restaurant.name} </Tag>
-                })}
               </div>
             }
           >
@@ -227,9 +244,9 @@ export default class Monitor extends PureComponent {
             <Divider style={{ margin: '40px 0 24px' }} />
             <div>
               <h3>说明</h3>
-                <p>
-                  点击 [店铺名] 或 [查看] 可进入店铺详情分析。
-                  选择两家店铺可进行[对比分析]。
+              <p>
+                点击 [店铺名] 或 [查看] 可进入店铺详情分析。
+                选择两家店铺可进行[对比分析]。
               </p>
             </div>
           </Card>

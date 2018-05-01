@@ -298,7 +298,7 @@ export default class Workplace extends PureComponent {
                 新建美团外卖爬虫
               </Button>
             </Card>
-            <Card bodyStyle={{ maxHeight: 388, overflow: 'auto' }} title="操作记录">
+            <Card bodyStyle={{ maxHeight: 624, overflow: 'auto' }} title="操作记录">
               <List
                 dataSource={actions.data}
                 renderItem={item => (
@@ -352,7 +352,7 @@ export default class Workplace extends PureComponent {
                 <h3>说明</h3>
                 <p>
                   点击 [店铺名] 或 [查看] 可进入店铺详情分析。
-                  点击 [更多操作]  进入 [监控台] 使用更多功能。
+                  点击 [数据分析]  进入 [监控台] 使用更多功能。
               </p>
               </div>
             </Card>

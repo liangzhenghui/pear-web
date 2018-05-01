@@ -154,10 +154,10 @@ export const getRouterData = app => {
         import('../routes/ConfigCrawler/Meituan/Step3')
       ),
     },
-    '/analy/normal/:crawlerId': {      
+    '/analy/normal/:crawlerId?': {      
       component: dynamicWrapper(app, ['chart'], () => import('../routes/Analy/Normal')),
     },
-    '/analy/pro/:crawlerId_1/:crawlerId_2': {      
+    '/analy/pro/:crawlerId_1?/:crawlerId_2?': {      
       component: dynamicWrapper(app, ['chart'], () => import('../routes/Analy/Pro')),
     }    
   };
