@@ -19,10 +19,7 @@ import styles from './Workplace.less';
 }))
 export default class Workplace extends PureComponent {
   componentWillMount() {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'activities/fetchList'
-    })
+    this.fetchCrawlers();
   }
 
   componentDidMount() {
@@ -30,6 +27,13 @@ export default class Workplace extends PureComponent {
     dispatch({
       type: 'global/changeLayoutCollapsed',
       payload: true
+    })
+  }
+
+  fetchCrawlers = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'activities/fetchList'
     })
   }
 
@@ -44,7 +48,8 @@ export default class Workplace extends PureComponent {
   };
 
   render() {
-    const { activitiesLoading, user, dispatch } = this.props;
+    const { activitiesLoading, user, dispatch, crawlerListoading } = this.props;
+    // const { crawlerPage, crawlerPerPage } = this.state;
     const { visitor_count, used_days } = user;
     const { crawlers, actions, compareData } = this.props.activities;
     const crawlers_data = crawlers.data
@@ -103,7 +108,7 @@ export default class Workplace extends PureComponent {
         key: 'name',
         render: (text, record) => (
           <p>
-            <a href="#"> {record.restaurant && record.restaurant.name}</a>{' '}
+            <Link to={`/analy/normal/${record.id}`}> {record.restaurant && record.restaurant.name}</Link>{' '}
           </p>
         ),
       },
@@ -295,7 +300,7 @@ export default class Workplace extends PureComponent {
                 新建美团外卖爬虫
               </Button>
             </Card>
-            <Card bodyStyle={{ maxHeight: 480, overflow: 'auto' }} title="操作记录">
+            <Card bodyStyle={{ maxHeight: 388, overflow: 'auto' }} title="操作记录">
               <List
                 dataSource={actions.data}
                 renderItem={item => (
@@ -319,7 +324,24 @@ export default class Workplace extends PureComponent {
               style={{ marginBottom: 24 }}
               title="爬虫列表"
               bordered={false}
-              extra={<Link to="/dashboard/monitor">更多操作</Link>}
+              extra={
+                <div>
+                  <Button
+                    loading={crawlerListoading}
+                    type="primary"
+                    shape="circle"
+                    icon="reload"
+                    onClick={() => this.fetchCrawlers()}
+                  />
+                  <Button type="primary"
+                    style={{ marginLeft: 16, marginRight: 10 }}
+                    onClick={this.goProAnaly}
+                  >
+                    <Link to="/dashboard/monitor">数据分析</Link>
+                  </Button>
+                </div>
+              }
+
               loading={activitiesLoading}
               bodyStyle={{ padding: 32 }}
             >

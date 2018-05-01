@@ -108,7 +108,7 @@ export default class Monitor extends PureComponent {
         key: 'name',
         render: (text, record) => (
           <p>
-            <a href="#"> {record.restaurant && record.restaurant.name}</a>{' '}
+            <Link to={`/analy/normal/${record.id}`}> {record.restaurant && record.restaurant.name}</Link>{' '}
           </p>
         ),
       },
