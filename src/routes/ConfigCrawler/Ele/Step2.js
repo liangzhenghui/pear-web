@@ -193,9 +193,12 @@ class Step2 extends React.PureComponent {
     }
     const payload = selectedRestaurants.map(item => {
       return {
-        ...selectedArea,
+        latitude: selectedArea.latitude,
+        longitude: selectedArea.longitude,
         restaurant: {
-          ...item,
+          id: item.id,
+          latitude: item.latitude,
+          longitude: item.longitude
         },
       };
     });
@@ -229,16 +232,7 @@ class Step2 extends React.PureComponent {
   };
 
   render() {
-    const {
-      dispatch,
-      searchRestaurantLoading,
-      choiceReataurantNameLoading,
-      commitTaskLoading,
-      fetchCitiesLoading,
-      restaurantArea,
-      restaurantListOfArea,
-      cities,
-    } = this.props;
+    const { dispatch, searchRestaurantLoading, choiceReataurantNameLoading, commitTaskLoading, fetchCitiesLoading, restaurantArea, restaurantListOfArea, cities, } = this.props;
     const {
       selectedArea,
       selectedRestaurants,

@@ -214,8 +214,7 @@ class Step1 extends React.PureComponent {
           <h4>登录饿了么平台</h4>
           <p>
             Spider平台不会存储任何你的饿了么用户信息。这里要求登录，只是为了登录饿了么拿到获取数据的权限。
-          </p>
-       
+          </p>       
         </div>
       </Fragment>
     );

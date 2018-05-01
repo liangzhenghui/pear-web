@@ -12,7 +12,8 @@ import {
   Pagination,
   Button,
   Popconfirm,
-  Tag
+  Tag,
+  Divider
 } from 'antd';
 import numeral from 'numeral';
 import { Pie, WaterWave, Gauge, TagCloud } from 'components/Charts';
@@ -223,6 +224,14 @@ export default class Monitor extends PureComponent {
               }}
               rowSelection={crawlerSelection}
             />
+            <Divider style={{ margin: '40px 0 24px' }} />
+            <div>
+              <h3>说明</h3>
+                <p>
+                  点击 [店铺名] 或 [查看] 可进入店铺详情分析。
+                  选择两家店铺可进行[对比分析]。
+              </p>
+            </div>
           </Card>
         </Row>
       </Fragment>

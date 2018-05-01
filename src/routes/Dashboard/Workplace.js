@@ -22,13 +22,6 @@ export default class Workplace extends PureComponent {
     this.fetchCrawlers();
   }
 
-  componentDidMount() {
-    const { dispatch } = this.props
-    dispatch({
-      type: 'global/changeLayoutCollapsed',
-      payload: true
-    })
-  }
 
   fetchCrawlers = () => {
     const { dispatch } = this.props;
@@ -48,10 +41,15 @@ export default class Workplace extends PureComponent {
   };
 
   render() {
-    const { activitiesLoading, user, dispatch, crawlerListoading } = this.props;
-    // const { crawlerPage, crawlerPerPage } = this.state;
+    const { activitiesLoading, user, activities, dispatch } = this.props;
+    if (!user || !activities) {
+      return (
+        <div style={{ width: '100%', textAlign: 'center' }}><Spin style={{ marginTop: 20 }} /></div>
+      )
+    }
+
     const { visitor_count, used_days } = user;
-    const { crawlers, actions, compareData } = this.props.activities;
+    const { crawlers, actions, compareData } = activities;
     const crawlers_data = crawlers.data
       ? crawlers.data.map((value, index) => {
         return {
@@ -349,6 +347,14 @@ export default class Workplace extends PureComponent {
                 columns={crawlerColumns}
                 dataSource={crawlers_data}
                 pagination={{ pageSize: 6 }} />
+              <Divider style={{ margin: '40px 0 24px' }} />
+              <div>
+                <h3>说明</h3>
+                <p>
+                  点击 [店铺名] 或 [查看] 可进入店铺详情分析。
+                  点击 [更多操作]  进入 [监控台] 使用更多功能。
+              </p>
+              </div>
             </Card>
           </Col>
         </Row>

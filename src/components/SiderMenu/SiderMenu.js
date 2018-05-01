@@ -12,9 +12,12 @@ const { SubMenu } = Menu;
 //   icon: 'setting',
 //   icon: 'http://demo.com/icon.png',
 //   icon: <Icon type="setting" />,
-const getIcon = icon => {
+const getIcon = icon => {  
   if (typeof icon === 'string' && icon.indexOf('http') === 0) {
     return <img src={icon} alt="icon" className={`${styles.icon} sider-menu-item-img`} />;
+  }
+  if (typeof icon === 'string' && icon.indexOf('/static') === 0) {
+    return <img src={icon} alt="icon" className={`${styles.icon} sider-menu-item-img`} />
   }
   if (typeof icon === 'string') {
     return <Icon type={icon} />;
@@ -98,8 +101,8 @@ export default class SiderMenu extends PureComponent {
         onClick={
           this.props.isMobile
             ? () => {
-                this.props.onCollapse(true);
-              }
+              this.props.onCollapse(true);
+            }
             : undefined
         }
       >
@@ -125,8 +128,8 @@ export default class SiderMenu extends PureComponent {
                   <span>{item.name}</span>
                 </span>
               ) : (
-                item.name
-              )
+                  item.name
+                )
             }
             key={item.path}
           >
@@ -195,8 +198,8 @@ export default class SiderMenu extends PureComponent {
     const menuProps = collapsed
       ? {}
       : {
-          openKeys,
-        };
+        openKeys,
+      };
     // if pathname can't match, use the nearest parent's key
     let selectedKeys = this.getSelectedMenuKeys();
     if (!selectedKeys.length) {
@@ -211,7 +214,7 @@ export default class SiderMenu extends PureComponent {
         onCollapse={onCollapse}
         width={256}
         className={styles.sider}
-        style={{backgroundColor:"#fff"}}        
+        style={{ backgroundColor: "#fff" }}
       >
         <div className={styles.logo} key="logo">
           <Link to="/">
