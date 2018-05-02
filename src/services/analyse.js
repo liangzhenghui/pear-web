@@ -12,6 +12,13 @@ export async function compareTwoCrawler(crawlerId_1, crawlerId_2) {
   return request(`/analyse/compare/${crawlerId_1}/${crawlerId_2}`);
 }
 
-export async function compareAll(){
+export async function compareAll() {
   return request('/analyse/compare_all')
+}
+
+export async function getUserAnalyseHistory(analyType = null) {
+  if (!analyType) {
+    return request(`/analyse/history`)
+  }
+  return request(`/analyse/history/${analyType}`)
 }

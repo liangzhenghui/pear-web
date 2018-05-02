@@ -13,7 +13,8 @@ import {
   Menu,
   Dropdown,
   Spin,
-  notification
+  notification,
+  Button
 } from 'antd';
 import numeral from 'numeral';
 import {
@@ -39,7 +40,7 @@ import ReactEcharts from 'echarts-for-react';
 import { queryCrawlers } from '../../services/crawler';
 import { wordCount } from '../../services/analyse';
 import { WORD_MAP } from '../../utils/const'
-import { routerRedux } from 'dva/router'
+import { routerRedux, Link } from 'dva/router'
 import { Redirect } from 'react-router';
 import emptyLogo from '../../assets/empty.png'
 
@@ -52,43 +53,38 @@ const { Description } = DescriptionList;
   loadingWordCount: loading.effects['chart/fetchWordCloud'],
 }))
 export default class Analysis extends Component {
+  constructor(props) {
+    super(props)    
+  }
   componentDidMount() {
     const { dispatch } = this.props;
-    const { crawlerId } = this.props.match.params;
-    console.log(crawlerId)
-    if (!crawlerId) {
-      notification.info({
-        message: '请先选择要单独分析的商家'
+    const { crawlerId } = this.props.match.params;    
+    if (crawlerId) {
+      dispatch({
+        type: 'chart/fetchCrawler',
+        crawlerId,
+      });
+      dispatch({
+        type: 'chart/fetchDishDistribution',
+        crawlerId,
+      });
+      dispatch({
+        type: 'chart/fetchWordCloud',
+        crawlerId,
       })
-      dispatch(routerRedux.push('/dashboard/monitor'))
-      return
     }
-    dispatch({
-      type: 'chart/fetchCrawler',
-      crawlerId,
-    });
-    dispatch({
-      type: 'chart/fetchDishDistribution',
-      crawlerId,
-    });
-    dispatch({
-      type: 'chart/fetchWordCloud',
-      crawlerId,
-    });
-
   }
 
-  componentWillUnmount() {
+  componentWillUnmount() {    
     const { dispatch } = this.props;
     dispatch({
       type: 'chart/clear',
     });
   }
 
-  render() {
+  render() {    
     const { chart, loadingWordCount } = this.props;
-    const { crawlerData, analyDish, wordCloudImages } = chart;
-
+    const { crawlerData, analyDish, wordCloudImages, history } = chart;
     if (!crawlerData || !analyDish) {
       return (
         <div style={{ margin: '0 auto' }}>
