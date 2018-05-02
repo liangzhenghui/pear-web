@@ -103,7 +103,7 @@ class AnalysisPro extends Component {
                     type: 'bar',
                     barWidth: 24,
                     data: [crawler_1.restaurant.sales, crawler_2.restaurant.sales],
-                    itemStyle: { color: "#ff4d4f" }
+                    itemStyle: { color: "#597ef7" }
                 },
 
             ]
@@ -385,18 +385,27 @@ class AnalysisPro extends Component {
                 {
                     name: crawler_1.restaurant.name,
                     type: 'line',
-
+                    color: '#ff85c0',
+                    symbol: 'circle',
+                    // smooth: true,
                     data: sales_compare_with_same_price.a.map(item => {
                         return item.value
-                    })
+                    }),
+                    lineStyle: {
+                        width: 3
+                    }
                 },
                 {
                     name: crawler_2.restaurant.name,
                     type: 'line',
-
+                    color: '#5cdbd3',
+                    symbol: 'circle',
                     data: sales_compare_with_same_price.b.map(item => {
                         return item.value
                     }),
+                    lineStyle: {
+                        width: 3
+                    },
                     xAxisIndex: 1,
                     yAxisIndex: 1
                 }
@@ -467,16 +476,26 @@ class AnalysisPro extends Component {
                 {
                     name: crawler_1.restaurant.name,
                     type: 'line',
+                    color: '#ffa39e',
+                    symbol: 'circle',
                     data: rate_compare_with_same_price.a.map(item => {
                         return item.value
-                    })
+                    }),
+                    lineStyle: {
+                        width: 3
+                    }
                 },
                 {
                     name: crawler_2.restaurant.name,
                     type: 'line',
+                    color: '#95de64',
+                    symbol: 'circle',
                     data: rate_compare_with_same_price.b.map(item => {
                         return item.value
                     }),
+                    lineStyle: {
+                        width: 3
+                    },
                     xAxisIndex: 1,
                     yAxisIndex: 1
                 }

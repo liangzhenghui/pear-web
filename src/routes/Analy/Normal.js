@@ -278,18 +278,12 @@ export default class Analysis extends Component {
     };
 
     // 评论数随价格统计
-    const rateCountWithPriceOption = {
+    const dishSalesWithPriceOption = {
       title: {
-        text: '评论数随价格统计',
+        text: '商品销量随价格统计',
       },
       tooltip: {
-        trigger: 'axis',
-        axisPointer: {
-          type: 'cross',
-          crossStyle: {
-            color: '#999',
-          },
-        },
+        trigger: 'axis'
       },
       toolbox: {
         feature: {
@@ -300,51 +294,49 @@ export default class Analysis extends Component {
       xAxis: [
         {
           type: 'category',
-          name: '商品价格',
+          name: '价格/元',
           data: price_dis.map(item => {
             return item.name;
           }),
-          axisPointer: {
-            type: 'shadow',
-          },
+          // axisPointer: {
+          //   type: 'shadow',
+          // },
         },
       ],
       yAxis: [
         {
           type: 'value',
-          name: '评论数',
+          name: '商品销量',
           min: 0,
-          interval: 100,
-          axisLabel: {
-            formatter: '{value} 条',
-          },
+          interval: 100
         },
       ],
       series: [
         {
           color: '#a0d911',
-          name: '评论数',
+          name: '销量',
           type: 'line',
+          label: {
+            formatter: '{b}元'
+          },
           data: price_dis.map(item => {
             return item.value;
           }),
-        },
-      ],
+          lineStyle: {
+            width: 3
+          },
+          symbol: 'circle'
+        }
+      ]
     };
 
-    // 评论数随时间统计
+    // 评价数与日期关系的统计
     const rateCountWithDateOption = {
       title: {
-        text: '评论数随日期统计',
+        text: '评价数与日期关系的统计',
       },
       tooltip: {
-        trigger: 'axis',
-        axisPointer: {
-          type: 'cross',
-          crossStyle: {
-            color: '#999',
-          },
-        },
+        trigger: 'axis'
       },
       toolbox: {
         feature: {
@@ -357,20 +349,17 @@ export default class Analysis extends Component {
           type: 'category',
           name: '日期',
           data: Object.keys(rate_date_dis),
-          axisPointer: {
-            type: 'shadow',
-          },
+          // axisPointer: {
+          //   type: 'shadow',
+          // },
         },
       ],
       yAxis: [
         {
           type: 'value',
-          name: '评论数',
+          name: '评价数',
           min: 0,
-          interval: 100,
-          axisLabel: {
-            formatter: '{value} 条',
-          },
+          interval: 10,
         },
       ],
       series: [
@@ -381,8 +370,12 @@ export default class Analysis extends Component {
           data: Object.keys(rate_date_dis).map(key => {
             return rate_date_dis[key];
           }),
-        },
-      ],
+          lineStyle: {
+            width: 3
+          },
+          symbol: 'circle'
+        }
+      ]
     };
 
     return (
@@ -462,7 +455,7 @@ export default class Analysis extends Component {
 
         <Row style={{ marginTop: 24 }}>
           <Card>
-            <ReactEcharts option={rateCountWithPriceOption} style={{ height: 600 }} />
+            <ReactEcharts option={dishSalesWithPriceOption} style={{ height: 600 }} />
           </Card>
         </Row>
 
