@@ -75,13 +75,13 @@ export const getRouterData = app => {
       ),
     },
     '/dashboard/workplace': {
-      component: dynamicWrapper(app, ['project', 'activities', 'chart', 'user'], () =>
+      component: dynamicWrapper(app, ['activities', 'chart', 'user'], () =>
         import('../routes/Dashboard/Workplace')
       ),
     },
     '/dashboard/monitor': {
       component: dynamicWrapper(app, ['monitor'], () => import('../routes/Dashboard/Monitor')),
-    },    
+    },
     '/exception/403': {
       component: dynamicWrapper(app, [], () => import('../routes/Exception/403')),
     },
@@ -154,12 +154,22 @@ export const getRouterData = app => {
         import('../routes/ConfigCrawler/Meituan/Step3')
       ),
     },
-    '/analy/normal/:crawlerId?': {      
+    '/analy/normal/:crawlerId': {
+      name: '单独分析',
       component: dynamicWrapper(app, ['chart'], () => import('../routes/Analy/Normal')),
     },
-    '/analy/pro/:crawlerId_1?/:crawlerId_2?': {      
+    '/analy/pro/:crawlerId_1/:crawlerId_2': {
+      name: '对比分析',
       component: dynamicWrapper(app, ['chart'], () => import('../routes/Analy/Pro')),
-    }    
+    },
+    '/analy/single': {
+      name: '单独分析历史',
+      component: dynamicWrapper(app, ['chart'], () => import('../routes/Analy/SingleTask')),
+    },
+    '/analy/multi': {
+      name: '对比分析历史',
+      component: dynamicWrapper(app, ['chart'], () => import('../routes/Analy/MultiTask')),
+    }
   };
   // Get name from ./menu.js or just set it in the router data.
   const menuData = getFlatMenuData(getMenuData());

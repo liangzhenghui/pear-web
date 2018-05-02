@@ -2,12 +2,12 @@ import React, { Component } from 'react'
 import styles from './Pro.less'
 import { connect } from 'dva'
 import PageHeaderLayout from '../../layouts/PageHeaderLayout'
-import { Card, Row, Col, Avatar, Spin, notification } from 'antd'
+import { Card, Row, Col, Avatar, Spin, notification, Button, Icon } from 'antd'
 import vs from '../../assets/vs.png'
 import { Redirect } from 'react-router';
 import ReactEcharts from 'echarts-for-react'
 import DescriptionList from '../../components/DescriptionList'
-import { routerRedux } from 'dva/router'
+import { routerRedux, Link } from 'dva/router'
 
 const { Description } = DescriptionList
 
@@ -17,21 +17,16 @@ class AnalysisPro extends Component {
         super(props)
     }
 
-    componentWillMount() {
+    componentDidMount() {
         const { crawlerId_1, crawlerId_2 } = this.props.match.params
         const { dispatch } = this.props
-        if (!crawlerId_1 || !crawlerId_2) {
-            notification.info({
-                message: '请先选择两个商家'
+        if (crawlerId_1 && crawlerId_2) {
+            dispatch({
+                type: 'chart/doCompareTwoCrawler',
+                crawlerId_1,
+                crawlerId_2
             })
-            dispatch(routerRedux.push('/dashboard/monitor'))
-            return
         }
-        dispatch({
-            type: 'chart/doCompareTwoCrawler',
-            crawlerId_1,
-            crawlerId_2
-        })
     }
 
     render() {

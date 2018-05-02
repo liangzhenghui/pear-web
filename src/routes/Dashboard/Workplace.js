@@ -1,14 +1,9 @@
 import React, { PureComponent } from 'react';
-import moment from 'moment';
 import { connect } from 'dva';
 import { Link, routerRedux } from 'dva/router';
 import { Row, Col, Card, List, Avatar, Button, Table, Divider, Progress, Icon, Spin } from 'antd';
-import { Radar } from 'components/Charts';
-import EditableLinkGroup from 'components/EditableLinkGroup';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import { APP_NAME, CRAWLER_TYPES } from '../../utils/const';
-import ReactEcharts from 'echarts-for-react';
-import WaterWave from '../../components/Charts/WaterWave'
 
 import styles from './Workplace.less';
 
@@ -358,11 +353,6 @@ export default class Workplace extends PureComponent {
             </Card>
           </Col>
         </Row>
-        {/* <Row>
-          <Card bodyStyle={{ maxHeight: 500 }} title="商家整体数据">
-            {Object.keys(compareData).length > 0 ? <ReactEcharts option={restaurantOption} /> : <p style={{textAlign:'center'}}>暂无数据</p>}
-          </Card>
-        </Row> */}
       </PageHeaderLayout>
     );
   }

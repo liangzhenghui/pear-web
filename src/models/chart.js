@@ -1,6 +1,6 @@
 import { fakeChartData } from '../services/api';
 import { queryCrawler } from '../services/crawler';
-import { dishDistribution, wordCount, compareTwoCrawler } from '../services/analyse';
+import { dishDistribution, wordCount, compareTwoCrawler, getUserAnalyseHistory } from '../services/analyse';
 
 export default {
   namespace: 'chart',
@@ -10,7 +10,8 @@ export default {
     crawlerData: null,
     analyDish: null,
     wordCloudImages: null,
-    compareData: {}
+    compareData: {},
+    history: null
   },
 
   effects: {
@@ -39,6 +40,13 @@ export default {
       const resp = yield call(compareTwoCrawler, crawlerId_1, crawlerId_2)
       yield put({
         type: 'saveCompare',
+        payload: resp
+      })
+    },
+    *fetchHistory({ analyType }, { call, put }) {
+      const resp = yield call(getUserAnalyseHistory, analyType)
+      yield put({
+        type: 'saveHistory',
         payload: resp
       })
     }
@@ -81,6 +89,12 @@ export default {
       return {
         ...state,
         compareData: payload
+      }
+    },
+    saveHistory(state, { payload }) {
+      return {
+        ...state,
+        history: payload
       }
     }
   },

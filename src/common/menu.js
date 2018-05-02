@@ -26,12 +26,12 @@ const menuData = [
   {
     name: '单独分析',
     icon: 'line-chart',
-    path: 'analy/normal'
+    path: '/analy/single'
   },
   {
     name: '对比分析',
     icon: 'bar-chart',
-    path: 'analy/pro'
+    path: '/analy/multi'
   },
   {
     name: '账户',
