@@ -155,19 +155,19 @@ export const getRouterData = app => {
       ),
     },
     '/analy/normal/:crawlerId': {
-      name: '单独分析',
+      name: '新建单独分析',
       component: dynamicWrapper(app, ['chart'], () => import('../routes/Analy/Normal')),
     },
     '/analy/pro/:crawlerId_1/:crawlerId_2': {
-      name: '对比分析',
+      name: '新建对比分析',
       component: dynamicWrapper(app, ['chart'], () => import('../routes/Analy/Pro')),
     },
     '/analy/single': {
-      name: '单独分析历史',
+      name: '单独分析',
       component: dynamicWrapper(app, ['chart'], () => import('../routes/Analy/SingleTask')),
     },
     '/analy/multi': {
-      name: '对比分析历史',
+      name: '对比分析',
       component: dynamicWrapper(app, ['chart'], () => import('../routes/Analy/MultiTask')),
     }
   };
