@@ -16,6 +16,12 @@ export default {
     effects: {
         *getEleSmsCode({ payload: { mobile, pic_code, pic_token } }, { call, put }) {
             const resp = yield call(eleSmsCode, mobile, pic_code, pic_token)
+            if (!resp) {
+                notification.success({
+                    message: '请求出错'
+                })
+                return
+            }
             if (resp.success) {
                 notification.success({
                     message: '短信验证码获取成功',
@@ -38,6 +44,12 @@ export default {
         },
         *loginEle({ payload: { mobile, sms_code, sms_token } }, { call, put }) {
             const resp = yield call(loginEle, mobile, sms_code, sms_token)
+            if (!resp) {
+                notification.success({
+                    message: '请求出错'
+                })
+                return
+            }
             if (resp.success) {
                 notification.success({
                     message: '登录饿了么成功',
@@ -51,6 +63,12 @@ export default {
         },
         *getPicCode({ payload: { mobile } }, { call, put }) {
             const resp = yield call(elePicCode, mobile)
+            if (!resp) {
+                notification.success({
+                    message: '请求出错'
+                })
+                return
+            }
             if (resp.success) {
                 yield put({
                     type: 'savePicCode',
@@ -64,6 +82,12 @@ export default {
         },
         *getRestaurantArea({ payload: { key, lat, lng } }, { call, put }) {
             const resp = yield call(searchRestaurantArea, key, lat, lng)
+            if (!resp) {
+                notification.success({
+                    message: '请求出错'
+                })
+                return
+            }
             yield put({
                 type: 'clearRestaurants'
             })
@@ -74,6 +98,12 @@ export default {
         },
         *getRestaurantInfo({ payload }, { call, put }) {
             const resp = yield call(restaurantListOfArea, payload)
+            if (!resp) {
+                notification.success({
+                    message: '请求出错'
+                })
+                return
+            }
             yield put({
                 type: 'saveRestaurantListOfArea',
                 payload: resp
@@ -81,6 +111,12 @@ export default {
         },
         *commitTask({ payload }, { call, put }) {
             const resp = yield call(commitCrawler, payload)
+            if (!resp) {
+                notification.success({
+                    message: '请求出错'
+                })
+                return
+            }
             if (resp.success) {
                 notification.success(
                     {
@@ -92,6 +128,12 @@ export default {
         },
         *fetchCities(_, { call, put }) {
             const resp = yield call(cities)
+            if (!resp) {
+                notification.success({
+                    message: '请求出错'
+                })
+                return
+            }
             yield put({
                 type: 'saveCities',
                 payload: resp
