@@ -48,12 +48,7 @@ const choiceRestaurant = [
           <div>
             <img
               style={{ maxWidth: 120, maxHeight: 120 }}
-              src={`https://fuss10.elemecdn.com/${record.image_path.substring(
-                0,
-                1
-              )}/${record.image_path.substring(1, 3)}/${record.image_path.substring(
-                3
-              )}.${record.image_path.substring(32)}`}
+              src={`https://fuss10.elemecdn.com/${record.image_path.substring(0, 1)}/${record.image_path.substring(1, 3)}/${record.image_path.substring(3)}.${record.image_path.substring(32)}`}
             />
           </div>
         }
@@ -132,14 +127,15 @@ class Step2 extends React.PureComponent {
     this.setState({
       selectedArea: value,
       offset: 0,
-    });
-    dispatch({
-      type: 'configEleCrawler/getRestaurantInfo',
-      payload: {
-        geohash: value.geohash,
-        latitude: value.latitude,
-        longitude: value.longitude,
-      },
+    }, () => {
+      dispatch({
+        type: 'configEleCrawler/getRestaurantInfo',
+        payload: {
+          geohash: value.geohash,
+          latitude: value.latitude,
+          longitude: value.longitude,
+        },
+      });
     });
   };
 

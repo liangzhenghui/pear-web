@@ -14,6 +14,11 @@ export default {
   effects: {
     *submit({ payload }, { call, put }) {
       const response = yield call(register, payload);
+      if (!response) {
+        notification.error({
+          message: '注册失败',
+        });
+      }
       if (response.status === 'ok') {
         notification.success({
           message: '注册成功',
@@ -22,7 +27,7 @@ export default {
           type: 'registerHandle',
           payload: response,
         });
-        yield put(routerRedux.push('/dashboard'));
+        yield put(routerRedux.push('/dashboard/workplace'));
       }
     },
   },

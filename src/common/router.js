@@ -137,20 +137,20 @@ export const getRouterData = app => {
       ),
     },
     '/configCrawler/meituan/step1': {
-      name: '登录饿了么',
-      component: dynamicWrapper(app, ['configEleCrawler'], () =>
+      name: '配置美团外卖爬虫',
+      component: dynamicWrapper(app, ['configMeituanCrawler'], () =>
         import('../routes/ConfigCrawler/Meituan/Step1')
       ),
     },
     '/configCrawler/ele/step2': {
       name: '选择商家',
-      component: dynamicWrapper(app, ['configEleCrawler'], () =>
+      component: dynamicWrapper(app, ['configMeituanCrawler'], () =>
         import('../routes/ConfigCrawler/Meituan/Step2')
       ),
     },
     '/configCrawler/ele/step3': {
       name: '提交爬虫任务',
-      component: dynamicWrapper(app, ['configEleCrawler'], () =>
+      component: dynamicWrapper(app, ['configMeituanCrawler'], () =>
         import('../routes/ConfigCrawler/Meituan/Step3')
       ),
     },

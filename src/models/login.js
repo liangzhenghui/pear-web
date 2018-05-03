@@ -15,18 +15,24 @@ export default {
   effects: {
     *login({ payload }, { call, put }) {
       const response = yield call(accountLogin, payload);
+      if (!response) {
+        notification.error({
+          message: '登录失败',
+        });
+        return
+      }
       yield put({
         type: 'changeLoginStatus',
         payload: response,
       });
       // Login successfully
-      if (response.status === 'ok') {        
+      if (response.status === 'ok') {
         cookie.set('u_id', response.user.id);
         reloadAuthorized();
         notification.success({
           message: '登录成功',
         });
-        yield put(routerRedux.push('/'));
+        yield put(routerRedux.push('/dashboard/workplace'));
       }
     },
     *logout(_, { put, select }) {

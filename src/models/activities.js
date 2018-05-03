@@ -15,6 +15,9 @@ export default {
   effects: {
     *fetchList(_, { call, put }) {
       const response = yield call(queryActivities);
+      if (!response) {
+        return
+      }
       yield put({
         type: 'saveList',
         payload: response,

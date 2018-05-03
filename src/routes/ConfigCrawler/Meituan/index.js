@@ -37,13 +37,13 @@ export default class ConfigCrawlerEle extends Component {
     const { match, routerData } = this.props;
     return (
       <PageHeaderLayout
-        title="配置美团外卖爬虫"
+        title="配置爬虫"
         content="使用美团外卖平台账号登录，然后选择希望爬取的商家"
       >
         <Card bordered={false}>
           <Fragment>
             <Steps current={this.getCurrentStep()} className={styles.steps}>
-              <Step title="登录美团" />
+              <Step title="确定商圈" />
               <Step title="确认爬取配置" />
               <Step title="提交" />
             </Steps>
