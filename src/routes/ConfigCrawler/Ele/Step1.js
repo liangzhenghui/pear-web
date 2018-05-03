@@ -143,9 +143,9 @@ class Step1 extends React.PureComponent {
                   {getFieldDecorator('pic_code', {
                     rules: [{ required: true, message: '请输入图片验证码' }],
                   })(<Input placeholder="图片验证码" />)}
-                </Col>               
+                </Col>
                 <Col span={4}>
-                  <Button                   
+                  <Button
                     loading={getElePicCodeLoading}
                     onClick={refreshPicCode}
                   >
@@ -153,7 +153,7 @@ class Step1 extends React.PureComponent {
                   </Button>
                 </Col>
                 <Col span={4}>
-                  <img style={{marginLeft:8}} src={pic_base64} />
+                  <img style={{ marginLeft: 8 }} src={pic_base64} />
                 </Col>
               </Row>
             </Form.Item>
@@ -186,8 +186,8 @@ class Step1 extends React.PureComponent {
             }}
             label=""
           >
-            <Row gutter={24}>
-              <Col span={12}>
+            <Row gutter={8}>
+              <Col span={8}>
                 <Button
                   type="primary"
                   onClick={onValidateForm}
@@ -198,7 +198,7 @@ class Step1 extends React.PureComponent {
             </Button>
               </Col>
               {ele_login_account &&
-                <Col span={12}>
+                <Col span={8}>
                   <Button
                     type="dashed"
                     onClick={this.jumpToNextStep}>
@@ -214,7 +214,7 @@ class Step1 extends React.PureComponent {
           <h4>登录饿了么平台</h4>
           <p>
             Spider平台不会存储任何你的饿了么用户信息。这里要求登录，只是为了登录饿了么拿到获取数据的权限。
-          </p>       
+          </p>
         </div>
       </Fragment>
     );

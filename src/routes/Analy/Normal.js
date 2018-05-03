@@ -184,24 +184,24 @@ export default class Analysis extends Component {
     // 销量统计
     const salesOption = {
       title: {
-        text: '各商品月销量',
+        text: '各商品月销量'
       },
       toolbox: {
         feature: {
           dataView: { show: true, readOnly: false },
-          saveAsImage: { show: true },
-        },
+          saveAsImage: { show: true }
+        }
       },
       tooltip: {
         trigger: 'axis',
         axisPointer: {
           type: 'shadow',
-        },
+        }
       },
       legend: {
         data: sales_dis.map(item => {
           return item.food_name;
-        }),
+        })
       },
       grid: {
         left: '3%',
@@ -267,11 +267,11 @@ export default class Analysis extends Component {
               shadowBlur: 10,
               shadowOffsetX: 0,
               shadowColor: 'rgba(0, 0, 0, 0.5)',
-            },
-          },
-        },
+            }
+          }
+        }
       ]
-    };
+    }
 
     // 评论数随价格统计
     const dishSalesWithPriceOption = {
@@ -294,9 +294,6 @@ export default class Analysis extends Component {
           data: price_dis.map(item => {
             return item.name;
           }),
-          // axisPointer: {
-          //   type: 'shadow',
-          // },
         },
       ],
       yAxis: [
