@@ -265,45 +265,52 @@ class Step2 extends React.PureComponent {
 
     return (
       <Form layout="horizontal" className={styles.stepForm} style={{ margin: '60px auto 30px' }}>
-        <Form.Item {...formItemLayout} className={styles.stepFormText} wrapperCol={{ span: 24 }}>
-          <div
-            style={{
-              width: 700,
-              maxHeight: 400,
-              overflow: 'auto',
-              overflowX: 'hidden',
-              padding: 5,
-              marginBottom: 20,
-            }}
+        <Form.Item {...formItemLayout} className={styles.stepFormText} wrapperCol={{ span:24 }}>
+          <Popover
+            title=""
+            placement="bottomLeft"
+            trigger="click"
+            visible={visibleCityListPop}
+            onVisibleChange={this.handleCityListPopVisibleChange}
+            content={
+              <div style={{
+                width: 700,
+                maxHeight: 400,
+                overflow: 'auto',
+                overflowX: 'hidden',
+                padding: 5
+              }}>
+                <Search
+                  placeholder="输入城市名过滤"
+                  style={{ width: 200, marginBottom: 10 }}
+                  onChange={this.filterCities}
+                />
+                <List
+                  grid={{ column: 6 }}
+                  dataSource={filterCities.length > 0 ? filterCities : cities}
+                  renderItem={item => (
+                    <List.Item>
+                      <Tooltip title={item.name} >
+                        <Button type='dashed' onClick={() => this.selectCity(item)}>{item.name.length > 3 ? item.name.substring(0, 3) + '...' : item.name}</Button>
+                      </Tooltip>
+                    </List.Item>
+                  )}
+                />
+              </div>
+            }
           >
-            <Search
-              placeholder="输入城市名过滤"
-              style={{ width: 200, marginBottom: 5 }}
-              onChange={this.filterCities}
-            />
-
-            <List
-              loading={fetchCitiesLoading}
-              grid={{ column: 6 }}
-              dataSource={filterCities.length > 0 ? filterCities : cities}
-              renderItem={item => (
-                <List.Item>
-                  <Tooltip title={item.name}>
-                    <Button type="dashed" onClick={() => this.selectCity(item)}>
-                      {item.name.length > 3 ? item.name.substring(0, 3) + '...' : item.name}
-                    </Button>
-                  </Tooltip>
-                </List.Item>
-              )}
-            />
-          </div>
+            {fetchCitiesLoading ? <Spin /> :
+              <Button style={{ width: "14%", }}>{selectedCity ? selectedCity.name : '选择城市'}<span style={{ marginLeft: 5 }} ><Icon type="down" /></span></Button>
+            }
+          </Popover>
           <Search
             style={{ width: '86%' }}
-            addonBefore={selectedCity ? selectedCity.name : '请选择城市'}
+            // addonBefore={selectedCity ? selectedCity.name : '选择城市'}
             placeholder="输入你要爬取的商圈（可输入省、市、区、县、镇、乡、街道等）"
             onSearch={this.handleSearch}
             enterButton
           />
+
         </Form.Item>
         {searchRestaurantLoading && (
           <Form.Item>
