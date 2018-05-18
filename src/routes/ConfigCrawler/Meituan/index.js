@@ -25,9 +25,7 @@ export default class ConfigCrawlerEle extends Component {
       case 'step1':
         return 0;
       case 'step2':
-        return 1;
-      case 'step3':
-        return 2;
+        return 1;      
       default:
         return 0;
     }
@@ -43,8 +41,7 @@ export default class ConfigCrawlerEle extends Component {
         <Card bordered={false}>
           <Fragment>
             <Steps current={this.getCurrentStep()} className={styles.steps}>
-              <Step title="确定商圈" />
-              <Step title="确认爬取配置" />
+              <Step title="确定商圈" />              
               <Step title="提交" />
             </Steps>
             <Switch>

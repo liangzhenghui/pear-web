@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
 import { routerRedux, Link } from 'dva/router';
 import styles from './style.less';
-import { Spin, Icon, Tabs, Input, notification, Col, Table, Button, message, Row } from 'antd'
+import { Spin, Icon, Tabs, Input, notification, Col, Table, Button, message, Row, List } from 'antd'
 
 
 const TabPane = Tabs.TabPane
@@ -14,7 +14,8 @@ class Step1 extends Component {
     this.state = {
       selectedRestaurants: [],
       inputAddress: null,
-      inputLocation: null
+      inputLocation: null,
+      addLocations: []
     }
   }
 
@@ -46,16 +47,28 @@ class Step1 extends Component {
       })
       return
     }
-    const { dispatch } = this.props
-    dispatch({
-      type: 'configMeituanCrawler/fetchRestaurantList',
-      address: inputAddress,
-      lat_lng: inputLocation
+    const location = {
+      'address': inputAddress,
+      'lng_lat': inputLocation
+    }
+    const { addLocations } = this.state
+    let flag = false
+    addLocations.forEach(item => {
+      if (item.address === inputAddress && item.lng_lat === inputLocation) {
+        flag = true
+        return
+      }
     })
-    message.config({
-      top: 100
+    if (flag) {
+      notification.info({
+        message: `${inputAddress} 已经添加`,
+        placement: 'bottomRight'
+      })
+      return
+    }
+    this.setState({
+      addLocations: addLocations.concat([location])
     })
-    message.loading('正在爬取商家数据', 0)
   }
 
   onSelectRestaurants = (_, selectedRows) => {
@@ -72,14 +85,34 @@ class Step1 extends Component {
   }
 
   commitCrawlerTask = () => {
+    const { addLocations } = this.state
+    if (addLocations.length < 1) {
+      notification.error({
+        message: '已添加坐标为空',
+        placement: 'bottomRight',
+        description: '请先添加坐标'
+      })
+      return
+    }
+    const { dispatch } = this.props
+    dispatch({
+      type: 'configMeituanCrawler/commitCrawlerTask',
+      payload: addLocations
+    })
+  }
 
+  removeAddedLocation = (item) => {
+    const { addLocations } = this.state
+    this.setState({
+      addLocations: addLocations.filter(location => !(location.address === item.address && location.lng_lat === item.lng_lat))
+    })
   }
 
   render() {
-    const { loadingGetRestaurant, step1ActiveKey, restaurantList } = this.props
-    const { selectedRestaurants } = this.state
+    const { loadingGetRestaurant, restaurantList, loadingCommitTask } = this.props
+    const { selectedRestaurants, addLocations } = this.state
     const baiduMap = (
-      <iframe src='http://api.map.baidu.com/lbsapi/getpoint/index.html' width="100%" height="500px"></iframe>
+      <iframe src='http://api.map.baidu.com/lbsapi/getpoint/index.html' width="100%" height="600px"></iframe>
     )
     const restaurantTableColumns = [
       {
@@ -107,55 +140,44 @@ class Step1 extends Component {
       onChange: this.onSelectRestaurants
     }
     return (
-      <Fragment>
-        <Tabs
-          defaultActiveKey={step1ActiveKey}
-          activeKey={step1ActiveKey}
-          tabPosition='left'
-          style={{ height: 700, overflow: 'auto' }}
-        >
-          <TabPane tab="拾取坐标" key="1">
+      <Fragment>        
             <div style={{ textAlign: 'center' }}>
               <h3>在坐标拾取系统搜索关键字，然后点击右侧复制按钮，最后将结果粘贴到下方输入框，提交。</h3>
-              {baiduMap}
-              <div style={{ margin: '0 0' }}>
-                <Input.Group style={{ marginTop: 10 }}>
-                  <Col span={5}>
-                    <Input placeholder="地点名" onInput={this.onAddressInput} value='成都大学' />
-                  </Col>
-                  <Col span={8}>
-                    <Input placeholder="粘贴坐标"
-                      onInput={this.onLocationInput}
-                      value='104.195018,30.656917' />
-                  </Col>
-                  <Col span={8}>
-                    <Button onClick={this.commitLocation} type='primary' loading={loadingGetRestaurant}>爬取商家</Button>
-                  </Col>
-                </Input.Group>
-              </div>
-            </div>
-          </TabPane>
+              <Row gutter={10}>
+                <Col xs={24} sm={24} md={24} lg={18}>
+                  {baiduMap}
+                </Col>
+                <Col xs={24} sm={24} md={24} lg={6}>
+                  <div style={{ padding: 5, maxHeight: 600, overflow: 'auto' }}>
+                    <Input.Group style={{ marginBottom: 10 }}>
+                      <Col span={8}>
+                        <Input placeholder="地点名" onInput={this.onAddressInput} />
+                      </Col>
+                      <Col span={12}>
+                        <Input placeholder="粘贴坐标"
+                          onInput={this.onLocationInput} />
+                      </Col>
+                      <Col span={4}>
+                        <Button onClick={this.commitLocation} size='small' type='primary' loading={loadingGetRestaurant}>添加</Button>
+                      </Col>
+                    </Input.Group>
 
-          <TabPane tab="确定商家" key="2">
-            <Table
-              pagination={{
-                pageSize: 6
-              }}
-              rowSelection={restaurantRowSelection}
-              columns={restaurantTableColumns}
-              dataSource={restaurantList.data} />
-            <Row gutter={24}>
-              <Col span={12}>
-                <Button type="primary" onClick={this.commitCrawlerTask}>
-                  提交任务
-                </Button>
-              </Col>
-              <Col span={12}>
-                <Button onClick={this.backMap}>重新选择地点</Button>
-              </Col>
-            </Row>
-          </TabPane>
-        </Tabs>
+                    <List
+                      header={<h3>已添加坐标</h3>}
+                      size="small"
+                      bordered
+                      dataSource={addLocations}
+                      renderItem={
+                        item => (<List.Item>{`${item.address}: ${item.lng_lat}`} <Button size='small' onClick={() => this.removeAddedLocation(item)}>删除</Button></List.Item>)
+                      }
+                    />
+                  </div>
+                </Col>
+              </Row>
+              <Button style={{ marginTop: 10 }} size='large' type="primary"
+                loading={loadingCommitTask}
+                onClick={this.commitCrawlerTask}>提交</Button>
+            </div>        
       </Fragment>
     );
   }
@@ -164,7 +186,8 @@ class Step1 extends Component {
 const state2props = ({ configMeituanCrawler, loading }) => {
   return {
     ...configMeituanCrawler,
-    loadingGetRestaurant: loading.effects['configMeituanCrawler/fetchRestaurantList']
+    loadingGetRestaurant: loading.effects['configMeituanCrawler/fetchRestaurantList'],
+    loadingCommitTask: loading.effects['configMeituanCrawler/commitCrawlerTask']
   }
 }
 

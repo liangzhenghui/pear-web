@@ -17,7 +17,7 @@ export default {
         *getEleSmsCode({ payload: { mobile, pic_code, pic_token } }, { call, put }) {
             const resp = yield call(eleSmsCode, mobile, pic_code, pic_token)
             if (!resp) {
-                notification.success({
+                notification.error({
                     message: '请求出错'
                 })
                 return
