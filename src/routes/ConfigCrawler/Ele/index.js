@@ -56,6 +56,7 @@ export default class ConfigCrawlerEle extends Component {
                   exact={item.exact}
                 />
               ))}
+              {/* 重定向 */}
               <Redirect exact from="/configCrawler/ele" to="/configCrawler/ele/info" />
               <Route render={NotFound} />
             </Switch>

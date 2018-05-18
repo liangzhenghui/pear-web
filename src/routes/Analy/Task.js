@@ -94,8 +94,8 @@ class Task extends Component {
                                         <Card key={key} style={{ marginBottom: 10 }}
                                             title={<div>
                                                 {id}
-                                                <Avatar src={data.restaurant.image} shape="square" style={{ marginLeft: 3, marginRight: 5 }} />{data.restaurant.name}
-                                                <Tag color="blue">单独分析</Tag>
+                                                <Avatar src={data.restaurant.image} shape="circle" style={{ marginLeft: 16, marginRight: 8 }} />{data.restaurant.name}
+                                                <Tag color="blue" style={{ marginLeft: 8, marginRight: 8 }}>单独分析</Tag>
                                                 <Tag>{created}</Tag>
                                             </div>}
                                             extra={<Button onClick={() => this.jumpToAnalyse(`/analy/normal/${crawler_one}`)}>查看更多</Button>}
@@ -191,12 +191,12 @@ class Task extends Component {
                                         <Card key={key} style={{ marginBottom: 10 }}
                                             title={<div>
                                                 {id}
-                                                <Avatar src={crawler_1.restaurant.image} shape="square" style={{ marginLeft: 3, marginRight: 5 }} />
+                                                <Avatar src={crawler_1.restaurant.image} shape="circle" style={{ marginLeft: 16, marginRight: 8 }} />
                                                 {crawler_1.restaurant.name}
-                                                <Icon type="minus" />
-                                                <Avatar src={crawler_2.restaurant.image} shape="square" style={{ marginLeft: 3, marginRight: 5 }} />
+                                                <Icon type="hourglass" style={{ marginLeft: 16, marginRight: 16 }} />
+                                                <Avatar src={crawler_2.restaurant.image} shape="circle" style={{ marginLeft: 8, marginRight: 8 }} />
                                                 {crawler_2.restaurant.name}
-                                                <Tag color="purple">对比分析</Tag>
+                                                <Tag color="purple" style={{ marginLeft: 16, marginRight: 16 }}>对比分析</Tag>
                                                 <Tag>{created}</Tag>
                                             </div>}
                                             extra={<Link to={`pro/${crawler_1.id}/${crawler_2.id}`} replace={true}>查看更多</Link>}

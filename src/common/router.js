@@ -13,8 +13,7 @@ const modelNotExisted = (app, model) =>
 
 // wrapper of dynamic
 const dynamicWrapper = (app, models, component) => {
-  // () => require('module')
-  // transformed by babel-plugin-dynamic-import-node-sync
+  
   if (component.toString().indexOf('.then(') < 0) {
     models.forEach(model => {
       if (modelNotExisted(app, model)) {
@@ -91,11 +90,6 @@ export const getRouterData = app => {
     '/exception/500': {
       component: dynamicWrapper(app, [], () => import('../routes/Exception/500')),
     },
-    '/exception/trigger': {
-      component: dynamicWrapper(app, ['error'], () =>
-        import('../routes/Exception/triggerException')
-      ),
-    },
     '/user': {
       component: dynamicWrapper(app, [], () => import('../layouts/UserLayout')),
     },
@@ -104,9 +98,6 @@ export const getRouterData = app => {
     },
     '/user/register': {
       component: dynamicWrapper(app, ['register'], () => import('../routes/User/Register')),
-    },
-    '/user/register-result': {
-      component: dynamicWrapper(app, [], () => import('../routes/User/RegisterResult')),
     },
     '/configCrawler/ele': {
       component: dynamicWrapper(app, ['configEleCrawler'], () =>
@@ -140,18 +131,6 @@ export const getRouterData = app => {
       name: '配置美团外卖爬虫',
       component: dynamicWrapper(app, ['configMeituanCrawler'], () =>
         import('../routes/ConfigCrawler/Meituan/Step1')
-      ),
-    },
-    '/configCrawler/ele/step2': {
-      name: '选择商家',
-      component: dynamicWrapper(app, ['configMeituanCrawler'], () =>
-        import('../routes/ConfigCrawler/Meituan/Step2')
-      ),
-    },
-    '/configCrawler/ele/step3': {
-      name: '提交爬虫任务',
-      component: dynamicWrapper(app, ['configMeituanCrawler'], () =>
-        import('../routes/ConfigCrawler/Meituan/Step3')
       ),
     },
     '/analy/normal/:crawlerId': {

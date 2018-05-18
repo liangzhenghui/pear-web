@@ -20,7 +20,9 @@ export default class ConfigCrawlerEle extends Component {
   getCurrentStep() {
     const { location } = this.props;
     const { pathname } = location;
+    // 根据‘/’将字符串拆分成几个部分
     const pathList = pathname.split('/');
+    
     switch (pathList[pathList.length - 1]) {
       case 'step1':
         return 0;

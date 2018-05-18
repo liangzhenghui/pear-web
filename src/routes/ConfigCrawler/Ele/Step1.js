@@ -4,6 +4,7 @@ import { Form, Input, Button, Select, Divider, Row, Col, notification, Alert } f
 import { routerRedux } from 'dva/router';
 import styles from './style.less';
 import { cookie } from '../../../utils/utils'
+import { transpileModule } from 'typescript';
 
 const { Option } = Select;
 
@@ -16,12 +17,13 @@ const formItemLayout = {
   },
 };
 
+// @使Form.create()成为装饰器函数，被这个函数修饰的类、组件就能拥有ant design提供的对表单填入数据的正确性验证
 @Form.create()
 class Step1 extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      mobileNotMatch: null
+      mobileNotMatch: true
     };
   }
 
@@ -119,6 +121,7 @@ class Step1 extends React.PureComponent {
         >
           <Form.Item {...formItemLayout} label="手机号">
             {getFieldDecorator('mobile', {
+              // required:必填字段
               rules: [{ required: true, message: '请输入手机号' }],
             })(
               <Input
@@ -126,7 +129,7 @@ class Step1 extends React.PureComponent {
                 onChange={this.handleMobileInput}
               />
             )}
-            {mobileNotMatch !== null ? (
+            {mobileNotMatch ? (
               <Alert
                 message={mobileNotMatch ? 'error' : 'success'}
                 type={mobileNotMatch ? 'error' : 'success'}
@@ -221,6 +224,7 @@ class Step1 extends React.PureComponent {
   }
 }
 
+// 将models里面的状态转换成属性
 const state2props = ({ configEleCrawler, loading }) => {
   return {
     ...configEleCrawler,

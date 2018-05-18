@@ -158,6 +158,7 @@ class Step2 extends React.PureComponent {
 
   onClickRestaurantRow = (value, index) => {
     const { selectedRestaurants } = this.state;
+    // 循环遍历selectedRestaurants数组
     for (const item of selectedRestaurants) {
       if (value.id === item.id) {
         notification.warn({
@@ -166,7 +167,10 @@ class Step2 extends React.PureComponent {
         return;
       }
     }
-    this.setState({ selectedRestaurants: this.state.selectedRestaurants.concat([value]) });
+    this.setState({ 
+      // 用caoncat将两个数组拼接在一起
+      selectedRestaurants: this.state.selectedRestaurants.concat([value]) 
+    });
   };
 
   deleteRstaurant = item => {
@@ -287,9 +291,7 @@ class Step2 extends React.PureComponent {
                   dataSource={filterCities.length > 0 ? filterCities : cities}
                   renderItem={item => (
                     <List.Item>
-                      <Tooltip title={item.name} >
-                        <Button type='dashed' onClick={() => this.selectCity(item)}>{item.name.length > 3 ? item.name.substring(0, 3) + '...' : item.name}</Button>
-                      </Tooltip>
+                      <Button type='dashed' onClick={() => this.selectCity(item)}>{item.name.length > 3 ? item.name.substring(0, 3) + '...' : item.name}</Button>
                     </List.Item>
                   )}
                 />
@@ -302,12 +304,10 @@ class Step2 extends React.PureComponent {
           </Popover>
           <Search
             style={{ width: '86%' }}
-            // addonBefore={selectedCity ? selectedCity.name : '选择城市'}
             placeholder="输入你要爬取的商圈（可输入省、市、区、县、镇、乡、街道等）"
             onSearch={this.handleSearch}
             enterButton
           />
-
         </Form.Item>
         {searchRestaurantLoading && (
           <Form.Item>

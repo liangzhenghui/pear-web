@@ -17,7 +17,7 @@ class Step1 extends Component {
       inputLocation: null
     }
   }
-
+  // e：输入框输入时的事件
   onAddressInput = (e) => {
     this.setState({
       inputAddress: e.target.value
@@ -119,16 +119,16 @@ class Step1 extends Component {
               <h3>在坐标拾取系统搜索关键字，然后点击右侧复制按钮，最后将结果粘贴到下方输入框，提交。</h3>
               {baiduMap}
               <div style={{ margin: '0 0' }}>
-                <Input.Group style={{ marginTop: 10 }}>
-                  <Col span={5}>
-                    <Input placeholder="地点名" onInput={this.onAddressInput} value='成都大学' />
+                <Input.Group style={{ marginTop: 24 }}>
+                  <Col span={6}>
+                    <Input placeholder="地点名" onInput={this.onAddressInput} />
                   </Col>
                   <Col span={8}>
                     <Input placeholder="粘贴坐标"
                       onInput={this.onLocationInput}
-                      value='104.195018,30.656917' />
+                    />
                   </Col>
-                  <Col span={8}>
+                  <Col span={4}>
                     <Button onClick={this.commitLocation} type='primary' loading={loadingGetRestaurant}>爬取商家</Button>
                   </Col>
                 </Input.Group>

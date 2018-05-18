@@ -63,9 +63,10 @@ function formatter(data, parentPath = '/', parentAuthority) {
     }
     const result = {
       ...item,
-      path,
+      path,      
       authority: item.authority || parentAuthority,
     };
+
     if (item.children) {
       result.children = formatter(item.children, `${parentPath}${item.path}/`, item.authority);
     }
