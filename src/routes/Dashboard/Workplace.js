@@ -245,7 +245,7 @@ export default class Workplace extends PureComponent {
                 columns={crawlerColumns}
                 dataSource={crawlers_data}
                 pagination={{ pageSize: 6 }} />
-              <Divider style={{ margin: '40px 0 24px' }} />
+              <Divider style={{ margin: '0px 0 24px' }} />
               <div>
                 <h3>说明</h3>
                 <p>
