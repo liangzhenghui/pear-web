@@ -61,7 +61,7 @@ class AnalysisPro extends Component {
                 </Row>
             </div>
         )
-
+        // 月销量对比
         const compareMonthSales = {
             title: {
                 text: '月销量对比'
@@ -103,7 +103,7 @@ class AnalysisPro extends Component {
 
             ]
         }
-
+        // 商品数量对比
         const compareDishsLength = {
             title: {
                 text: '商品数量对比'
@@ -195,7 +195,7 @@ class AnalysisPro extends Component {
                 },
             ]
         }
-
+        // 起送费对比
         const compareSendFee = {
             title: {
                 text: '起送费对比'
@@ -235,7 +235,7 @@ class AnalysisPro extends Component {
                 },
             ]
         }
-
+        // 平均配送时间对比
         const compareArriveTime = {
             title: {
                 text: '平均配送时间对比'
@@ -275,7 +275,7 @@ class AnalysisPro extends Component {
                 },
             ]
         }
-
+        // 平均评分对比
         const compareScore = {
             title: {
                 text: '平均评分对比'

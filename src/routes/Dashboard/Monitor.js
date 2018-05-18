@@ -108,7 +108,7 @@ export default class Monitor extends PureComponent {
         key: 'name',
         render: (text, record) => (
           <p>
-            <Link to={`/analy/normal/${record.id}`}> {record.restaurant && record.restaurant.name}</Link>{' '}
+            <Link to={`/analy/normal/${record.id}`}> {record.restaurant && record.restaurant.name}</Link>
           </p>
         ),
       },
@@ -169,6 +169,7 @@ export default class Monitor extends PureComponent {
               title="确定删除?(会删除爬取到的数据)"
               onConfirm={() => this.handleDeleteCrawler(record.id)}
             >
+              {/* 0是进行中，1是成功，2是失败 */}
               <Button disabled={record.status === 0}>删除</Button>
             </Popconfirm>
           </div>

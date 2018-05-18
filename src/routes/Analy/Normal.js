@@ -48,6 +48,7 @@ const { TabPane } = Tabs;
 const { RangePicker } = DatePicker;
 const { Description } = DescriptionList;
 
+// @connect将models里面的state转换成组件里的props
 @connect(({ chart, loading }) => ({
   chart,
   loadingWordCount: loading.effects['chart/fetchWordCloud'],
@@ -130,13 +131,6 @@ export default class Analysis extends Component {
       </Row >
     );
 
-    const rateDistribution = rate_dis.map(item => {
-      return {
-        x: item.food_name,
-        y: item.value,
-      };
-    });
-
     let ratePercent = {};
     rate_dis.map(item => {
       const scrore = item.value;
@@ -155,6 +149,7 @@ export default class Analysis extends Component {
       };
     });
 
+    // 商品详细信息
     const dishTableColumns = [
       {
         title: '菜名',
@@ -423,7 +418,8 @@ export default class Analysis extends Component {
           </Col>
           <Col span={20}>
             <Card loading={loadingWordCount} title="评价词云" bodyStyle={{ textAlign: 'center' }}>
-              <img style={{ maxWidth: '600px' }} alt="" src={wordCloudImages ? wordCloudImages.total_image ? wordCloudImages.total_image : emptyLogo : emptyLogo} />
+              <img style={{ maxWidth: '600px' }} alt="" 
+              src={wordCloudImages ? wordCloudImages.total_image ? wordCloudImages.total_image : emptyLogo : emptyLogo} />
             </Card>
           </Col>
         </Row>

@@ -25,7 +25,7 @@ export default {
         type: 'changeLoginStatus',
         payload: response,
       });
-      // Login successfully
+      // 登录成功
       if (response.status === 'ok') {
         cookie.set('u_id', response.user.id);
         reloadAuthorized();
@@ -37,10 +37,10 @@ export default {
     },
     *logout(_, { put, select }) {
       try {
-        // get location pathname
+        // 得到路径名
         const urlParams = new URL(window.location.href);
         const pathname = yield select(state => state.routing.location.pathname);
-        // add the parameters in the url
+        // 在url中添加参数
         urlParams.searchParams.set('redirect', pathname);
         window.history.replaceState(null, 'login', urlParams.href);
       } finally {

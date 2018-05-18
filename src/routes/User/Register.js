@@ -52,6 +52,7 @@ export default class Register extends Component {
     clearInterval(this.interval);
   }
 
+  // 获取验证码
   onGetCaptcha = () => {
     let count = 59;
     this.setState({ count });

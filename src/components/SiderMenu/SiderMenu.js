@@ -8,11 +8,8 @@ import { urlToList } from '../_utils/pathTools';
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
-// Allow menu.js config icon as string or ReactNode
-//   icon: 'setting',
-//   icon: 'http://demo.com/icon.png',
-//   icon: <Icon type="setting" />,
-const getIcon = icon => {  
+//获得Icon
+const  getIcon = icon => {  
   if (typeof icon === 'string' && icon.indexOf('http') === 0) {
     return <img src={icon} alt="icon" className={`${styles.icon} sider-menu-item-img`} />;
   }
@@ -77,14 +74,13 @@ export default class SiderMenu extends PureComponent {
   }
   /**
    * 判断是否是http链接.返回 Link 或 a
-   * Judge whether it is http link.return a or Link
    * @memberof SiderMenu
    */
   getMenuItemPath = item => {
     const itemPath = this.conversionPath(item.path);
     const icon = getIcon(item.icon);
     const { target, name } = item;
-    // Is it a http link
+    // 如果是http链接
     if (/^https?:\/\//.test(itemPath)) {
       return (
         <a href={itemPath} target={target}>
@@ -159,12 +155,12 @@ export default class SiderMenu extends PureComponent {
       })
       .filter(item => item);
   };
-  // Get the currently selected menu
+  // 获取当前节点的菜单
   getSelectedMenuKeys = () => {
     const { location: { pathname } } = this.props;
     return urlToList(pathname).map(itemPath => getMeunMatcheys(this.flatMenuKeys, itemPath).pop());
   };
-  // conversion Path
+
   // 转化路径
   conversionPath = path => {
     if (path && path.indexOf('http') === 0) {
@@ -173,7 +169,7 @@ export default class SiderMenu extends PureComponent {
       return `/${path || ''}`.replace(/\/+/g, '/');
     }
   };
-  // permission to check
+  // 权限检查
   checkPermissionItem = (authority, ItemDom) => {
     if (this.props.Authorized && this.props.Authorized.check) {
       const { check } = this.props.Authorized;
@@ -194,13 +190,13 @@ export default class SiderMenu extends PureComponent {
   render() {
     const { logo, collapsed, onCollapse } = this.props;
     const { openKeys } = this.state;
-    // Don't show popup menu when it is been collapsed
+    // 当弹出菜单被折叠时不显示
     const menuProps = collapsed
       ? {}
       : {
         openKeys,
       };
-    // if pathname can't match, use the nearest parent's key
+    // 如果路径名不匹配，则使用最近的父节点
     let selectedKeys = this.getSelectedMenuKeys();
     if (!selectedKeys.length) {
       selectedKeys = [openKeys[openKeys.length - 1]];

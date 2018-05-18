@@ -127,15 +127,14 @@ class Step2 extends React.PureComponent {
     this.setState({
       selectedArea: value,
       offset: 0,
-    }, () => {
-      dispatch({
-        type: 'configEleCrawler/getRestaurantInfo',
-        payload: {
-          geohash: value.geohash,
-          latitude: value.latitude,
-          longitude: value.longitude,
-        },
-      });
+    });
+    dispatch({
+      type: 'configEleCrawler/getRestaurantInfo',
+      payload: {
+        geohash: value.geohash,
+        latitude: value.latitude,
+        longitude: value.longitude,
+      },
     });
   };
 
@@ -159,6 +158,7 @@ class Step2 extends React.PureComponent {
 
   onClickRestaurantRow = (value, index) => {
     const { selectedRestaurants } = this.state;
+    // 循环遍历selectedRestaurants数组
     for (const item of selectedRestaurants) {
       if (value.id === item.id) {
         notification.warn({
@@ -167,7 +167,10 @@ class Step2 extends React.PureComponent {
         return;
       }
     }
-    this.setState({ selectedRestaurants: this.state.selectedRestaurants.concat([value]) });
+    this.setState({ 
+      // 用caoncat将两个数组拼接在一起
+      selectedRestaurants: this.state.selectedRestaurants.concat([value]) 
+    });
   };
 
   deleteRstaurant = item => {
@@ -237,7 +240,6 @@ class Step2 extends React.PureComponent {
       selectedCity,
       visibleCityListPop,
     } = this.state;
-
     const onPrev = () => {
       dispatch({ type: 'configEleCrawler/resetStep1' });
       dispatch(routerRedux.push('/configCrawler/ele'));
@@ -262,10 +264,9 @@ class Step2 extends React.PureComponent {
         ),
       },
     ];
-
     return (
       <Form layout="horizontal" className={styles.stepForm} style={{ margin: '60px auto 30px' }}>
-        <Form.Item {...formItemLayout} className={styles.stepFormText} wrapperCol={{ span: 24 }}>
+        <Form.Item {...formItemLayout} className={styles.stepFormText} wrapperCol={{ span:24 }}>
           <Popover
             title=""
             placement="bottomLeft"
@@ -290,9 +291,7 @@ class Step2 extends React.PureComponent {
                   dataSource={filterCities.length > 0 ? filterCities : cities}
                   renderItem={item => (
                     <List.Item>
-                      <Tooltip title={item.name} >
-                        <Button type='dashed' onClick={() => this.selectCity(item)}>{item.name.length > 3 ? item.name.substring(0, 3) + '...' : item.name}</Button>
-                      </Tooltip>
+                      <Button type='dashed' onClick={() => this.selectCity(item)}>{item.name.length > 3 ? item.name.substring(0, 3) + '...' : item.name}</Button>
                     </List.Item>
                   )}
                 />
@@ -305,12 +304,10 @@ class Step2 extends React.PureComponent {
           </Popover>
           <Search
             style={{ width: '86%' }}
-            // addonBefore={selectedCity ? selectedCity.name : '选择城市'}
             placeholder="输入你要爬取的商圈（可输入省、市、区、县、镇、乡、街道等）"
             onSearch={this.handleSearch}
             enterButton
           />
-
         </Form.Item>
         {searchRestaurantLoading && (
           <Form.Item>
@@ -387,17 +384,18 @@ class Step2 extends React.PureComponent {
             );
           })}
         </Form.Item>
-        <Form.Item>
-          <div style={{ textAlign: 'center' }}>
-            <Button
-              type="primary"
-              onClick={this.commitTask}
-              loading={commitTaskLoading}
-              style={{ marginRight: 50 }}>
-              提交
-              </Button>
-            <Button type='dashed' onClick={onPrev}>上一步</Button>
-          </div>
+        <Form.Item style={{ margin: '0 269px' }}>
+          <Button
+            type="primary"
+            onClick={this.commitTask}
+            loading={commitTaskLoading}
+            style={{ marginRight: 16 }}
+          >
+            提交
+          </Button>
+          <Button onClick={onPrev} style={{ marginLeft: 8 }}>
+            上一步
+          </Button>
         </Form.Item>
       </Form>
     );

@@ -18,7 +18,7 @@ class Step1 extends Component {
       addLocations: []
     }
   }
-
+  // e：输入框输入时的事件
   onAddressInput = (e) => {
     this.setState({
       inputAddress: e.target.value
@@ -140,44 +140,43 @@ class Step1 extends Component {
       onChange: this.onSelectRestaurants
     }
     return (
-      <Fragment>        
-            <div style={{ textAlign: 'center' }}>
-              <h3>在坐标拾取系统搜索关键字，然后点击右侧复制按钮，最后将结果粘贴到下方输入框，提交。</h3>
-              <Row gutter={10}>
-                <Col xs={24} sm={24} md={24} lg={18}>
-                  {baiduMap}
-                </Col>
-                <Col xs={24} sm={24} md={24} lg={6}>
-                  <div style={{ padding: 5, maxHeight: 600, overflow: 'auto' }}>
-                    <Input.Group style={{ marginBottom: 10 }}>
-                      <Col span={8}>
-                        <Input placeholder="地点名" onInput={this.onAddressInput} />
-                      </Col>
-                      <Col span={12}>
-                        <Input placeholder="粘贴坐标"
-                          onInput={this.onLocationInput} />
-                      </Col>
-                      <Col span={4}>
-                        <Button onClick={this.commitLocation} size='small' type='primary' loading={loadingGetRestaurant}>添加</Button>
-                      </Col>
-                    </Input.Group>
-
-                    <List
-                      header={<h3>已添加坐标</h3>}
-                      size="small"
-                      bordered
-                      dataSource={addLocations}
-                      renderItem={
-                        item => (<List.Item>{`${item.address}: ${item.lng_lat}`} <Button size='small' onClick={() => this.removeAddedLocation(item)}>删除</Button></List.Item>)
-                      }
-                    />
-                  </div>
-                </Col>
-              </Row>
-              <Button style={{ marginTop: 10 }} size='large' type="primary"
-                loading={loadingCommitTask}
-                onClick={this.commitCrawlerTask}>提交</Button>
-            </div>        
+      <Fragment>
+        <div style={{ textAlign: 'center' }}>
+          <h3>在坐标拾取系统搜索关键字，然后点击右侧复制按钮，最后将结果粘贴到下方输入框，提交。</h3>
+          <Row gutter={10}>
+            <Col xs={24} sm={24} md={24} lg={18}>
+              {baiduMap}
+            </Col>
+            <Col xs={24} sm={24} md={24} lg={6}>
+              <div style={{ padding: 5, maxHeight: 600, overflow: 'auto' }}>
+                <Input.Group style={{ marginBottom: 10 }}>
+                  <Col span={8}>
+                    <Input placeholder="地点名" onInput={this.onAddressInput} />
+                  </Col>
+                  <Col span={12}>
+                    <Input placeholder="粘贴坐标"
+                      onInput={this.onLocationInput} />
+                  </Col>
+                  <Col span={4}>
+                    <Button onClick={this.commitLocation} size='small' type='primary' loading={loadingGetRestaurant}>添加</Button>
+                  </Col>
+                </Input.Group>
+                <List
+                  header={<h3>已添加坐标</h3>}
+                  size="small"
+                  bordered
+                  dataSource={addLocations}
+                  renderItem={
+                    item => (<List.Item>{`${item.address}: ${item.lng_lat}`} <Button size='small' onClick={() => this.removeAddedLocation(item)}>删除</Button></List.Item>)
+                  }
+                />
+              </div>
+            </Col>
+          </Row>
+          <Button style={{ marginTop: 10 }} size='large' type="primary"
+            loading={loadingCommitTask}
+            onClick={this.commitCrawlerTask}>提交</Button>
+        </div>
       </Fragment>
     );
   }

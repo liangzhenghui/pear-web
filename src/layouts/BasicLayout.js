@@ -18,25 +18,7 @@ import logo from '../assets/logo2.png';
 
 const { Content, Header, Footer } = Layout;
 const { AuthorizedRoute, check } = Authorized;
-
-/**
- * 根据菜单取得重定向地址.
- */
 const redirectData = [];
-const getRedirect = item => {
-  if (item && item.children) {
-    if (item.children[0] && item.children[0].path) {
-      redirectData.push({
-        from: `${item.path}`,
-        to: `${item.children[0].path}`,
-      });
-      item.children.forEach(children => {
-        getRedirect(children);
-      });
-    }
-  }
-};
-getMenuData().forEach(getRedirect);
 
 /**
  * 获取面包屑映射
@@ -159,6 +141,10 @@ class BasicLayout extends React.PureComponent {
       this.props.dispatch(routerRedux.push('/exception/trigger'));
       return;
     }
+    if(key==='userInfo'){
+      this.props.dispatch(routerRedux.push('/userInfo'));
+      return;
+    }
     if (key === 'logout') {
       this.props.dispatch({
         type: 'login/logout',
@@ -243,7 +229,8 @@ class BasicLayout extends React.PureComponent {
               ]}
               copyright={
                 <Fragment>
-                  Copyright <Icon type="copyright" /> 2018 外卖商家数据分析服务平台
+                  Copyright <Icon type="copyri
+                  ght" /> 2018 外卖商家数据分析服务平台
                 </Fragment>
               }
             />

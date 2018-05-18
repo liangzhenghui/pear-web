@@ -45,7 +45,7 @@ export default {
         *loginEle({ payload: { mobile, sms_code, sms_token } }, { call, put }) {
             const resp = yield call(loginEle, mobile, sms_code, sms_token)
             if (!resp) {
-                notification.success({
+                notification.error({
                     message: '请求出错'
                 })
                 return
@@ -54,6 +54,7 @@ export default {
                 notification.success({
                     message: '登录饿了么成功',
                 })
+                // 跳转到配置爬虫页面：第二步
                 yield put(routerRedux.push('/configCrawler/ele/confirm'))
             } else {
                 notification.error({
@@ -64,7 +65,7 @@ export default {
         *getPicCode({ payload: { mobile } }, { call, put }) {
             const resp = yield call(elePicCode, mobile)
             if (!resp) {
-                notification.success({
+                notification.error({
                     message: '请求出错'
                 })
                 return
@@ -83,7 +84,7 @@ export default {
         *getRestaurantArea({ payload: { key, lat, lng } }, { call, put }) {
             const resp = yield call(searchRestaurantArea, key, lat, lng)
             if (!resp) {
-                notification.success({
+                notification.error({
                     message: '请求出错'
                 })
                 return
@@ -99,7 +100,7 @@ export default {
         *getRestaurantInfo({ payload }, { call, put }) {
             const resp = yield call(restaurantListOfArea, payload)
             if (!resp) {
-                notification.success({
+                notification.error({
                     message: '请求出错'
                 })
                 return
@@ -112,7 +113,7 @@ export default {
         *commitTask({ payload }, { call, put }) {
             const resp = yield call(commitCrawler, payload)
             if (!resp) {
-                notification.success({
+                notification.error({
                     message: '请求出错'
                 })
                 return
@@ -129,7 +130,7 @@ export default {
         *fetchCities(_, { call, put }) {
             const resp = yield call(cities)
             if (!resp) {
-                notification.success({
+                notification.error({
                     message: '请求出错'
                 })
                 return

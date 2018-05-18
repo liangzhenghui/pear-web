@@ -33,20 +33,13 @@ export default class LoginPage extends Component {
     }
   };
 
-  renderMessage = content => {
-    return <Alert style={{ marginBottom: 24 }} message={content} type="error" showIcon />;
-  };
-
 
   render() {
     const { login, submitting } = this.props;
     return (
       <div className={styles.main}>
         <Login defaultActiveKey={'account'} onSubmit={this.handleSubmit}>
-          {login.status === 'error' &&
-            login.type === 'account' &&
-            !login.submitting &&
-            this.renderMessage('账户或密码错误')}
+          
           <UserName name="account" placeholder="用户名/手机号/邮箱" />
           <Password name="password" placeholder="密码" />
           <div>
