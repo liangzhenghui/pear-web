@@ -68,11 +68,8 @@ export default class GlobalHeader extends PureComponent {
     } = this.props;
     const menu = (
       <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
-        <Menu.Item disabled>
+        <Menu.Item key="userInfo">
           <Icon type="user" />个人中心
-        </Menu.Item>
-        <Menu.Item disabled>
-          <Icon type="setting" />设置
         </Menu.Item>
         <Menu.Item key="triggerError">
           <Icon type="close-circle" />触发报错
@@ -110,27 +107,22 @@ export default class GlobalHeader extends PureComponent {
             }}
           />
           <Tooltip title="使用文档">
-            <a
-              target="_blank"
-              href="/#doc"
-              rel="noopener noreferrer"
-              className={styles.action}
-            >
+            <a target="_blank" href="/#doc" rel="noopener noreferrer" className={styles.action}>
               <Icon type="question-circle-o" />
             </a>
           </Tooltip>
           {currentUser && currentUser.name ? (
             <Dropdown overlay={menu}>
               <span className={`${styles.action} ${styles.account}`}>
-                <Avatar size="small" className={'avatar'} size={'large'} shape={'square'}>
+                <Avatar className={'avatar'} size="small" style={{ backgroundColor: '#87d068' }} icon="user" >
                   {currentUser.name}
                 </Avatar>
-                <span className={styles.name}>{currentUser.name}</span>
+                <span className={styles.name} style={{marginLeft:16, verticalAlign:'middle'}}>{currentUser.name}</span>
               </span>
             </Dropdown>
           ) : (
-              <Spin size="small" style={{ marginLeft: 8 }} />
-            )}
+            <Spin size="small" style={{ marginLeft: 8 }} />
+          )}
         </div>
       </div>
     );

@@ -4,20 +4,15 @@ export default {
   namespace: 'user',
 
   state: {
-    list: [],
-    currentUser: {},
+    currentUser: {}
   },
 
   effects: {
-    *fetch(_, { call, put }) {
-      const response = yield call(queryUsers);
-      yield put({
-        type: 'save',
-        payload: response,
-      });
-    },
     *fetchCurrent(_, { call, put }) {
       const response = yield call(queryCurrent);
+      if (!response) {
+        return
+      }
       yield put({
         type: 'saveCurrentUser',
         payload: response,
@@ -26,12 +21,6 @@ export default {
   },
 
   reducers: {
-    save(state, action) {
-      return {
-        ...state,
-        list: action.payload,
-      };
-    },
     saveCurrentUser(state, action) {
       return {
         ...state,

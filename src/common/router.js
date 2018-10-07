@@ -13,8 +13,7 @@ const modelNotExisted = (app, model) =>
 
 // wrapper of dynamic
 const dynamicWrapper = (app, models, component) => {
-  // () => require('module')
-  // transformed by babel-plugin-dynamic-import-node-sync
+  
   if (component.toString().indexOf('.then(') < 0) {
     models.forEach(model => {
       if (modelNotExisted(app, model)) {
@@ -70,72 +69,17 @@ function getFlatMenuData(menus) {
 export const getRouterData = app => {
   const routerConfig = {
     '/': {
-      component: dynamicWrapper(app, ['user', 'login'], () => import('../layouts/BasicLayout')),
+      component: dynamicWrapper(app, ['user', 'global', 'login'], () =>
+        import('../layouts/BasicLayout')
+      ),
     },
     '/dashboard/workplace': {
-      component: dynamicWrapper(app, ['project', 'activities', 'chart'], () => import('../routes/Dashboard/Workplace')),                  
-    },
-    '/dashboard/analysis': {
-      component: dynamicWrapper(app, ['chart'], () => import('../routes/Dashboard/Analysis')),
+      component: dynamicWrapper(app, ['activities', 'chart', 'user'], () =>
+        import('../routes/Dashboard/Workplace')
+      ),
     },
     '/dashboard/monitor': {
       component: dynamicWrapper(app, ['monitor'], () => import('../routes/Dashboard/Monitor')),
-    },    
-    '/form/basic-form': {
-      component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/BasicForm')),
-    },
-    '/form/step-form': {
-      component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/StepForm')),
-    },
-    '/form/step-form/info': {
-      name: '分步表单（填写转账信息）',
-      component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/StepForm/Step1')),
-    },
-    '/form/step-form/confirm': {
-      name: '分步表单（确认转账信息）',
-      component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/StepForm/Step2')),
-    },
-    '/form/step-form/result': {
-      name: '分步表单（完成）',
-      component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/StepForm/Step3')),
-    },
-    '/form/advanced-form': {
-      component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/AdvancedForm')),
-    },
-    '/list/table-list': {
-      component: dynamicWrapper(app, ['rule'], () => import('../routes/List/TableList')),
-    },
-    '/list/basic-list': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/List/BasicList')),
-    },
-    '/list/card-list': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/List/CardList')),
-    },
-    '/list/search': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/List/List')),
-    },
-    '/list/search/projects': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/List/Projects')),
-    },
-    '/list/search/applications': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/List/Applications')),
-    },
-    '/list/search/articles': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/List/Articles')),
-    },
-    '/profile/basic': {
-      component: dynamicWrapper(app, ['profile'], () => import('../routes/Profile/BasicProfile')),
-    },
-    '/profile/advanced': {
-      component: dynamicWrapper(app, ['profile'], () =>
-        import('../routes/Profile/AdvancedProfile')
-      ),
-    },
-    '/result/success': {
-      component: dynamicWrapper(app, [], () => import('../routes/Result/Success')),
-    },
-    '/result/fail': {
-      component: dynamicWrapper(app, [], () => import('../routes/Result/Error')),
     },
     '/exception/403': {
       component: dynamicWrapper(app, [], () => import('../routes/Exception/403')),
@@ -146,11 +90,6 @@ export const getRouterData = app => {
     '/exception/500': {
       component: dynamicWrapper(app, [], () => import('../routes/Exception/500')),
     },
-    '/exception/trigger': {
-      component: dynamicWrapper(app, ['error'], () =>
-        import('../routes/Exception/triggerException')
-      ),
-    },
     '/user': {
       component: dynamicWrapper(app, [], () => import('../layouts/UserLayout')),
     },
@@ -160,12 +99,59 @@ export const getRouterData = app => {
     '/user/register': {
       component: dynamicWrapper(app, ['register'], () => import('../routes/User/Register')),
     },
-    '/user/register-result': {
-      component: dynamicWrapper(app, [], () => import('../routes/User/RegisterResult')),
+    '/userInfo':{
+      component: dynamicWrapper(app, ['user'], () => import('../routes/User/Info')),
     },
-    // '/user/:id': {
-    //   component: dynamicWrapper(app, [], () => import('../routes/User/SomeComponent')),
-    // },
+    '/configCrawler/ele': {
+      component: dynamicWrapper(app, ['configEleCrawler'], () =>
+        import('../routes/ConfigCrawler/Ele')
+      ),
+    },
+    '/configCrawler/meituan': {
+      component: dynamicWrapper(app, ['configMeituanCrawler'], () =>
+        import('../routes/ConfigCrawler/Meituan')
+      ),
+    },
+    '/configCrawler/ele/info': {
+      name: '登录饿了么',
+      component: dynamicWrapper(app, ['configEleCrawler'], () =>
+        import('../routes/ConfigCrawler/Ele/Step1')
+      ),
+    },
+    '/configCrawler/ele/confirm': {
+      name: '选择商家',
+      component: dynamicWrapper(app, ['configEleCrawler'], () =>
+        import('../routes/ConfigCrawler/Ele/Step2')
+      ),
+    },
+    '/configCrawler/ele/result': {
+      name: '提交爬虫任务',
+      component: dynamicWrapper(app, ['configEleCrawler'], () =>
+        import('../routes/ConfigCrawler/Ele/Step3')
+      ),
+    },
+    '/configCrawler/meituan/step1': {
+      name: '配置美团外卖爬虫',
+      component: dynamicWrapper(app, ['configMeituanCrawler'], () =>
+        import('../routes/ConfigCrawler/Meituan/Step1')
+      ),
+    },
+    '/analy/normal/:crawlerId': {
+      name: '新建单独分析',
+      component: dynamicWrapper(app, ['chart'], () => import('../routes/Analy/Normal')),
+    },
+    '/analy/pro/:crawlerId_1/:crawlerId_2': {
+      name: '新建对比分析',
+      component: dynamicWrapper(app, ['chart'], () => import('../routes/Analy/Pro')),
+    },
+    '/analy/single': {
+      name: '单独分析',
+      component: dynamicWrapper(app, ['chart'], () => import('../routes/Analy/SingleTask')),
+    },
+    '/analy/multi': {
+      name: '对比分析',
+      component: dynamicWrapper(app, ['chart'], () => import('../routes/Analy/MultiTask')),
+    }
   };
   // Get name from ./menu.js or just set it in the router data.
   const menuData = getFlatMenuData(getMenuData());

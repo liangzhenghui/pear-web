@@ -1,28 +1,49 @@
-import { queryActivities } from '../services/api';
+import { queryActivities, requestRestaurant } from '../services/api';
+import { compareAll } from '../services/analyse'
 
 export default {
   namespace: 'activities',
 
   state: {
-    list: [],
+    crawlers: {
+      crawler_total: 0
+    },
+    actions: {},
+    compareData: {}
   },
 
   effects: {
     *fetchList(_, { call, put }) {
       const response = yield call(queryActivities);
+      if (!response) {
+        return
+      }
       yield put({
         type: 'saveList',
-        payload: Array.isArray(response) ? response : [],
+        payload: response,
       });
     },
+    *fetchCompareAllData(_, { call, put }) {
+      const resp = yield call(compareAll)
+      yield put({
+        type: 'saveCompareAllData',
+        payload: resp
+      })
+    }
   },
 
   reducers: {
     saveList(state, action) {
       return {
         ...state,
-        list: action.payload,
+        ...action.payload,
       };
     },
+    saveCompareAllData(state, { payload }) {
+      return {
+        ...state,
+        compareData: payload
+      }
+    }
   },
 };

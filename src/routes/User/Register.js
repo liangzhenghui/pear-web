@@ -52,6 +52,7 @@ export default class Register extends Component {
     clearInterval(this.interval);
   }
 
+  // 获取验证码
   onGetCaptcha = () => {
     let count = 59;
     this.setState({ count });
@@ -162,15 +163,14 @@ export default class Register extends Component {
     const { count, prefix } = this.state;
     return (
       <div className={styles.main}>
-        <h3>注册</h3>
         <Form onSubmit={this.handleSubmit}>
-        <FormItem>
+          <FormItem>
             {getFieldDecorator('name', {
               rules: [
                 {
                   required: true,
                   message: '请输入用户名！',
-                },                
+                },
               ],
             })(<Input size="large" placeholder="用户名" />)}
           </FormItem>

@@ -1,39 +1,55 @@
 import { fakeChartData } from '../services/api';
+import { queryCrawler } from '../services/crawler';
+import { dishDistribution, wordCount, compareTwoCrawler, getUserAnalyseHistory } from '../services/analyse';
 
 export default {
   namespace: 'chart',
 
   state: {
-    visitData: [],
-    visitData2: [],
-    salesData: [],
-    searchData: [],
-    offlineData: [],
-    offlineChartData: [],
-    salesTypeData: [],
-    salesTypeDataOnline: [],
-    salesTypeDataOffline: [],
-    radarData: [],
     loading: false,
+    crawlerData: null,
+    analyDish: null,
+    wordCloudImages: null,
+    compareData: {},
+    history: null
   },
 
   effects: {
-    *fetch(_, { call, put }) {
-      const response = yield call(fakeChartData);
+    *fetchCrawler({ crawlerId }, { call, put }) {
+      const resp = yield call(queryCrawler, crawlerId);
       yield put({
-        type: 'save',
-        payload: response,
+        type: 'saveCrawler',
+        crawlerData: resp,
       });
     },
-    *fetchSalesData(_, { call, put }) {
-      const response = yield call(fakeChartData);
+    *fetchDishDistribution({ crawlerId }, { call, put }) {
+      const resp = yield call(dishDistribution, crawlerId);
       yield put({
-        type: 'save',
-        payload: {
-          salesData: response.salesData,
-        },
+        type: 'saveAnalyDish',
+        analyDish: resp,
       });
     },
+    *fetchWordCloud({ crawlerId }, { call, put }) {
+      const resp = yield call(wordCount, crawlerId);
+      yield put({
+        type: 'saveWordCloud',
+        wordCloudImages: resp,
+      });
+    },
+    *doCompareTwoCrawler({ crawlerId_1, crawlerId_2 }, { call, put }) {
+      const resp = yield call(compareTwoCrawler, crawlerId_1, crawlerId_2)
+      yield put({
+        type: 'saveCompare',
+        payload: resp
+      })
+    },
+    *fetchHistory({ analyType }, { call, put }) {
+      const resp = yield call(getUserAnalyseHistory, analyType)
+      yield put({
+        type: 'saveHistory',
+        payload: resp
+      })
+    }
   },
 
   reducers: {
@@ -45,17 +61,41 @@ export default {
     },
     clear() {
       return {
-        visitData: [],
-        visitData2: [],
-        salesData: [],
-        searchData: [],
-        offlineData: [],
-        offlineChartData: [],
-        salesTypeData: [],
-        salesTypeDataOnline: [],
-        salesTypeDataOffline: [],
-        radarData: [],
+        crawlerData: null,
+        analyDish: null,
+        wordCloudImages: null,
+        compareData: {}
       };
     },
+    saveCrawler(state, { crawlerData }) {
+      return {
+        ...state,
+        crawlerData
+      };
+    },
+    saveAnalyDish(state, { analyDish }) {
+      return {
+        ...state,
+        analyDish
+      };
+    },
+    saveWordCloud(state, { wordCloudImages }) {
+      return {
+        ...state,
+        wordCloudImages
+      };
+    },
+    saveCompare(state, { payload }) {
+      return {
+        ...state,
+        compareData: payload
+      }
+    },
+    saveHistory(state, { payload }) {
+      return {
+        ...state,
+        history: payload
+      }
+    }
   },
 };

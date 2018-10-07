@@ -22,4 +22,7 @@ export default {
   disableDynamicImport: true,
   publicPath: '/',
   hash: true,
+  define: {
+    'process.env.pear_web_api_host': process.env.pear_web_api_host
+  }
 };

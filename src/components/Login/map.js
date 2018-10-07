@@ -42,11 +42,11 @@ const map = {
     rules: [
       {
         required: true,
-        message: 'Please enter mobile number!',
+        message: '请输入手机号!',
       },
       {
         pattern: /^1\d{10}$/,
-        message: 'Wrong mobile number format!',
+        message: '手机号格式错误!',
       },
     ],
   },
@@ -60,7 +60,7 @@ const map = {
     rules: [
       {
         required: true,
-        message: 'Please enter Captcha!',
+        message: '请输入验证码!',
       },
     ],
   },

@@ -2,6 +2,7 @@ import fetch from 'dva/fetch';
 import { notification } from 'antd';
 import { routerRedux } from 'dva/router';
 import store from '../index';
+import { API_HOST } from './const'
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -27,8 +28,12 @@ function checkStatus(response) {
       message: `请求错误 ${response.status}: ${response.url}`,
       description: errortext,
     });
-  }  
-  return response
+    const error = new Error(errortext);
+    error.name = response.status;
+    error.response = response;
+    throw error;
+  }
+  return response;
 }
 
 /**
@@ -41,6 +46,7 @@ function checkStatus(response) {
 export default function request(url, options) {
   const defaultOptions = {
     credentials: 'include',
+    mode: 'cors'
   };
   const newOptions = { ...defaultOptions, ...options };
   if (newOptions.method === 'POST' || newOptions.method === 'PUT') {
@@ -60,7 +66,7 @@ export default function request(url, options) {
     }
   }
 
-  return fetch(url, newOptions)
+  return fetch('/api' + url, newOptions)
     .then(checkStatus)
     .then(response => {
       if (newOptions.method === 'DELETE' || response.status === 204) {
